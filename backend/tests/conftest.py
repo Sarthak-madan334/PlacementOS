@@ -17,6 +17,9 @@ from app.adapters.db.session import get_db
 from app.core.config import settings
 from app.main import app
 
+# Ensure mock auth is enabled for test client runs
+settings.ALLOW_MOCK_AUTH = True
+
 # Use SQLite in-memory for testing
 TEST_DATABASE_URL = "sqlite:///:memory:"
 

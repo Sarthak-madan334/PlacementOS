@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     ]
 
     # Identity / Auth
+    ALLOW_MOCK_AUTH: bool = False  # Must be explicitly enabled for local/test mock tokens
     AUTH_ISSUER_URL: str | None = None
     AUTH_AUDIENCE: str | None = None
     SUPABASE_JWT_SECRET: str | None = None

@@ -258,3 +258,131 @@ def test_delete_profile(client: TestClient, auth_headers_user1: dict):
     del_again = client.delete("/api/v1/me/profile", headers=auth_headers_user1)
     assert del_again.status_code == status.HTTP_404_NOT_FOUND
 
+
+def test_user_id_spoofing_attempt_ignored(client: TestClient, auth_headers_user1: dict, db_session):
+    """Client supplying arbitrary user_id or id in request cannot override authenticated identity."""
+    from sqlalchemy import select
+    from app.adapters.db.models import User, StudentProfile
+
+    spoofed_payload = dict(SAMPLE_PROFILE_PAYLOAD)
+    fake_user_id = "00000000-0000-0000-0000-000000000000"
+    spoofed_payload["user_id"] = fake_user_id
+    spoofed_payload["id"] = fake_user_id
+
+    response = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=spoofed_payload)
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+
+    # The profile's user_id must be the verified user's ID, NOT the fake_user_id
+    user1 = db_session.scalar(select(User).where(User.auth_subject == "test-user-1"))
+    assert user1 is not None
+    assert str(data["user_id"]) == str(user1.id)
+    assert str(data["user_id"]) != fake_user_id
+
+
+def test_delete_profile_cleans_up_profile_files(client: TestClient, auth_headers_user1: dict, db_session):
+    """Deleting a student profile also cleans up any associated ProfileFile records."""
+    from sqlalchemy import select
+    from app.adapters.db.models import User, ProfileFile
+
+    # Create profile
+    client.put("/api/v1/me/profile", headers=auth_headers_user1, json=SAMPLE_PROFILE_PAYLOAD)
+
+    user1 = db_session.scalar(select(User).where(User.auth_subject == "test-user-1"))
+    assert user1 is not None
+
+    # Attach a ProfileFile record for this user
+    pf = ProfileFile(
+        user_id=user1.id,
+        provider="local",
+        object_key="resumes/test_resume.pdf",
+        filename="test_resume.pdf",
+        mime_type="application/pdf",
+        byte_size=1024,
+    )
+    db_session.add(pf)
+    db_session.commit()
+    pf_id = pf.id
+
+    assert db_session.get(ProfileFile, pf_id) is not None
+
+    # Delete profile
+    del_resp = client.delete("/api/v1/me/profile", headers=auth_headers_user1)
+    assert del_resp.status_code == status.HTTP_200_OK
+
+    # Verify ProfileFile was removed
+    assert db_session.get(ProfileFile, pf_id) is None
+
+
+def test_validation_cgpa_exact_boundaries(client: TestClient, auth_headers_user1: dict):
+    """Test valid boundary values for CGPA: 0.0, 10.0, 4.0 scale."""
+    # CGPA 0.0 is valid
+    payload = dict(SAMPLE_PROFILE_PAYLOAD)
+    payload["cgpa"] = 0.0
+    payload["cgpa_scale"] = 10.0
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["cgpa"] == 0.0
+
+    # CGPA 10.0 on 10.0 scale is valid
+    payload["cgpa"] = 10.0
+    payload["cgpa_scale"] = 10.0
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["cgpa"] == 10.0
+
+    # CGPA 4.0 on 4.0 scale is valid
+    payload["cgpa"] = 3.95
+    payload["cgpa_scale"] = 4.0
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["cgpa"] == 3.95
+    assert resp.json()["cgpa_scale"] == 4.0
+
+
+def test_validation_graduation_year_exact_boundaries(client: TestClient, auth_headers_user1: dict):
+    """Test graduation year boundaries: 1900, 2100, and out-of-bounds."""
+    payload = dict(SAMPLE_PROFILE_PAYLOAD)
+
+    # 1900 valid
+    payload["graduation_year"] = 1900
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["graduation_year"] == 1900
+
+    # 2100 valid
+    payload["graduation_year"] = 2100
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["graduation_year"] == 2100
+
+    # 1899 invalid
+    payload["graduation_year"] = 1899
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    # 2101 invalid
+    payload["graduation_year"] = 2101
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+
+def test_validation_project_url_schemes(client: TestClient, auth_headers_user1: dict):
+    """Test project URLs: http, https, javascript scheme rejection, plain text rejection."""
+    payload = dict(SAMPLE_PROFILE_PAYLOAD)
+
+    # http URL is accepted
+    payload["projects"] = [{"title": "P1", "description": "D1", "url": "http://example.com/project"}]
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_200_OK
+
+    # javascript: scheme is rejected
+    payload["projects"] = [{"title": "P1", "description": "D1", "url": "javascript:alert(1)"}]
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    # plain text without scheme is rejected
+    payload["projects"] = [{"title": "P1", "description": "D1", "url": "not-a-valid-url"}]
+    resp = client.put("/api/v1/me/profile", headers=auth_headers_user1, json=payload)
+    assert resp.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+

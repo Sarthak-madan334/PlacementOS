@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
-from app.adapters.db.models import Project, Skill, StudentProfile, User
+from app.adapters.db.models import ProfileFile, Project, Skill, StudentProfile, User
 from app.adapters.db.session import get_db
 from app.api.v1.schemas.profile import ProfileCreateOrUpdate, ProfileRead
 from app.core.exceptions import NotFoundException
@@ -107,13 +107,19 @@ def delete_my_profile(
     db: Session = Depends(get_db),
 ):
     """Delete the authenticated student's profile and all associated evidence.
-    Cascade handles skills and projects.
+    Cascade handles skills and projects. Also cleans up associated user profile files.
     """
     stmt = select(StudentProfile).where(StudentProfile.user_id == current_user.id)
     profile = db.scalar(stmt)
 
     if not profile:
         raise NotFoundException("Profile not found", code="profile_not_found")
+
+    # Clean up associated profile files/resumes for this user
+    files_stmt = select(ProfileFile).where(ProfileFile.user_id == current_user.id)
+    user_files = db.scalars(files_stmt).all()
+    for uf in user_files:
+        db.delete(uf)
 
     db.delete(profile)
     db.commit()

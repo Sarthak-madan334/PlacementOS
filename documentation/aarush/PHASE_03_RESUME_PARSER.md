@@ -28,3 +28,18 @@ A deterministic ResumeSignal-style parser that extracts candidate information fo
 ## Independence contract
 
 The parser accepts a file and returns candidate facts; it does not require profile CRUD, auth persistence, scoring, or UI. Frontend can render a fixture with the same response contract.
+
+## Implementation Status
+
+- **Status**: COMPLETE
+- **Modules Created**:
+  - `backend/app/adapters/parser/validator.py`: Format detection (PDF, DOCX, TXT magic bytes), 5 MiB size enforcement, empty and corrupt file handling.
+  - `backend/app/adapters/parser/pdf_adapter.py`: PDF text extraction with page tracking via `pypdf`.
+  - `backend/app/adapters/parser/docx_adapter.py`: DOCX text and table extraction via `python-docx`.
+  - `backend/app/adapters/parser/txt_adapter.py`: Multi-encoding text extraction (UTF-8, Latin-1, CP1252).
+  - `backend/app/services/resume_parser.py`: Deterministic pipeline for normalization, section detection, facts extraction (contact, education, skills, projects, experience), and quality signals (`action_verb`, `quantified_outcome`, `weak_language`, `missing_section`).
+  - `backend/app/api/v1/schemas/resume.py`: Pydantic response contracts (`ResumeParseResponse`, `CandidateFacts`, `QualitySignal`).
+  - `backend/app/api/v1/endpoints/resume.py`: `POST /api/v1/resumes/parse` endpoint.
+  - `backend/app/cli/parse_resume.py`: Standalone CLI parsing tool.
+  - `backend/fixtures/resumes/`: Synthetic fixtures (`sample_resume.txt`, `minimal_resume.txt`, `weak_language_resume.txt`).
+  - `backend/tests/test_resume_parser.py`: Comprehensive test suite verifying formats, validation, errors, quality signals, determinism, and endpoint integration.

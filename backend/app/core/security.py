@@ -1,58 +1,82 @@
-import os
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import jwt, JWTError
-from pydantic import BaseModel
+"""Authentication, JWT verification, and user identity resolution."""
+
 from typing import Optional
+import jwt
+from jwt.exceptions import PyJWTError
+from fastapi import Depends, Header, status
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
-# Setup Supabase JWT secret from env var (e.g. from Render environment)
-SUPABASE_JWT_SECRET = os.environ.get("SUPABASE_JWT_SECRET", "dummy_secret_for_local_dev")
-ALGORITHM = "HS256"
+from app.adapters.db.models import User
+from app.adapters.db.session import get_db
+from app.core.config import settings
+from app.core.exceptions import UnauthorizedException
 
-security = HTTPBearer()
 
-class TokenData(BaseModel):
-    sub: str
-    email: Optional[str] = None
-    role: Optional[str] = None
+def extract_bearer_token(authorization: Optional[str] = Header(None)) -> str:
+    """Extract token string from Authorization: Bearer <token> header."""
+    if not authorization:
+        raise UnauthorizedException("Authentication token required", code="unauthorized")
 
-def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> TokenData:
+    parts = authorization.strip().split()
+    if len(parts) != 2 or parts[0].lower() != "bearer":
+        raise UnauthorizedException("Invalid authorization header format. Expected 'Bearer <token>'", code="unauthorized")
+
+    return parts[1]
+
+
+def verify_jwt_token(token: str) -> dict:
+    """Validate JWT token signature, issuer, audience, and expiration.
+    Returns token payload if valid, otherwise raises UnauthorizedException.
     """
-    Validates Supabase JWT.
-    Enforces Phase 07 Security constraints:
-    - Verifies signature using SUPABASE_JWT_SECRET.
-    - Verifies audience.
-    - Ensures user is authenticated (not anon).
-    """
-    token = credentials.credentials
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    # Local/Testing mock token fallback ONLY when explicitly enabled via ALLOW_MOCK_AUTH in local/test env
+    if settings.ALLOW_MOCK_AUTH and settings.APP_ENV in ("local", "test"):
+        return {
+            "sub": token,
+            "email": f"{token}@example.com" if "@" not in token else token,
+        }
+
+    # If mock auth is not enabled, require valid JWT configuration and decode
+    if not settings.SUPABASE_JWT_SECRET and not settings.AUTH_ISSUER_URL:
+        raise UnauthorizedException("Authentication service is not configured", code="auth_not_configured")
+
+    # Standard JWT validation with Supabase or configured issuer
     try:
-        payload = jwt.decode(
-            token, 
-            SUPABASE_JWT_SECRET, 
-            algorithms=[ALGORITHM], 
-            audience="authenticated"
-        )
-        sub: str = payload.get("sub")
-        if sub is None:
-            raise credentials_exception
-        token_data = TokenData(sub=sub, email=payload.get("email"), role=payload.get("role"))
-        
-        # Enforce that token is from a signed-in user, not anon role
-        if token_data.role != "authenticated":
-             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not enough permissions: Must be authenticated",
-            )
-            
-        return token_data
-    except JWTError:
-        raise credentials_exception
+        decode_kwargs = {
+            "algorithms": ["HS256", "RS256"],
+            "options": {"verify_exp": True, "verify_sub": True},
+        }
+        if settings.AUTH_AUDIENCE:
+            decode_kwargs["audience"] = settings.AUTH_AUDIENCE
+        if settings.AUTH_ISSUER_URL:
+            decode_kwargs["issuer"] = settings.AUTH_ISSUER_URL
 
-def get_current_user_subject(token_data: TokenData = Depends(verify_token)) -> str:
-    """Returns the unique subject ID from the identity provider."""
-    return token_data.sub
+        secret = settings.SUPABASE_JWT_SECRET or ""
+        payload = jwt.decode(token, secret, **decode_kwargs)
+        if not payload.get("sub"):
+            raise UnauthorizedException("Token missing subject (sub) claim", code="unauthorized")
+        return payload
+    except PyJWTError as e:
+        raise UnauthorizedException(f"Invalid authentication token: {str(e)}", code="unauthorized")
+
+
+def get_current_user(
+    token: str = Depends(extract_bearer_token),
+    db: Session = Depends(get_db),
+) -> User:
+    """Resolve and return internal authenticated User record from verified JWT subject."""
+    payload = verify_jwt_token(token)
+    auth_subject = str(payload["sub"])
+    email = payload.get("email")
+
+    # Find or create User record
+    stmt = select(User).where(User.auth_subject == auth_subject)
+    user = db.scalar(stmt)
+
+    if not user:
+        user = User(auth_subject=auth_subject, email=email)
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    return user

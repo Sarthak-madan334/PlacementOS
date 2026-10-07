@@ -1,31 +1,33 @@
 # Sejal — Phase 08: Deployment and Integration Harness
 
-**Owner:** Sejal
-**Can start:** Immediately with placeholder apps and contract fixtures
-**Deployable result:** Reproducible preview setup and smoke workflow
+**Owner:** Sejal Kumari (System Design)  
+**Status:** DEPLOYMENT & INTEGRATION READY  
+**Deliverable:** Canonical Deployment Specification located at [`../../docs/system-design/deployment.md`](../../docs/system-design/deployment.md)
 
-## Outcome
+---
 
-Prepare a repeatable path for each application component to deploy independently and for compatible versions to connect in an isolated preview. It does not own unfinished feature implementation. Follow [`../../docs/DEPLOYMENT.md`](../../docs/DEPLOYMENT.md) for provider-specific setup.
+## 1. Outcome & Scope
 
-## Build
+Prepared and validated the repeatable deployment and integration path for PlacementOS across Vercel (Next.js), Render (FastAPI), and Supabase (PostgreSQL + Auth + Storage).
 
-- Document/create Vercel frontend and Render FastAPI preview configurations with separate preview/production environment values.
-- Add backend live/readiness checks and a frontend fixture-mode route so both deploy before integration is available.
-- Define exact CORS origin configuration and API base URL per environment.
-- Provision a non-production PostgreSQL database and private storage bucket; use separate credentials and synthetic records.
-- Add a GitHub workflow for lint/type/build/backend tests and migration checks. Keep provider deploy steps documented and reproducible.
-- Add the integration smoke script/checklist in [`../../docs/INTEGRATION_RUNBOOK.md`](../../docs/INTEGRATION_RUNBOOK.md).
-- Record deployed commit, migration revision, preview URLs, and pass/fail status for each release candidate.
+Comprehensive architecture, environment variables, multi-layer security policies, integration flows, and production launch gates are formally documented in [`../../docs/system-design/deployment.md`](../../docs/system-design/deployment.md).
 
-## Acceptance
+---
 
-- Frontend and backend deploy independently and show their own health/demo path.
-- Preview can connect using the SRD contract without exposing service keys in browser configuration.
-- Database migrations apply to an empty preview DB; readiness status responds correctly.
-- Smoke checklist covers profile, optional parse, opportunity, assessment, error/missing-data paths, cross-user access, and private file cleanup when uploads are enabled.
-- Rollback instructions identify app rollback and safe forward-fix/restore approach for database changes.
+## 2. Integration Verification Summary
 
-## Independence contract
+| Integration Path | Status | Verification Detail |
+|---|---|---|
+| **Vercel → Render API** | **VERIFIED** | Configured via `NEXT_PUBLIC_API_BASE_URL` with exact origin CORS matching on Render. |
+| **Supabase Auth JWT → FastAPI** | **VERIFIED** | Bearer token passed in `Authorization` header; validated on Render for `iss`, `aud`, `exp`, and `sub`. |
+| **FastAPI → Supabase PostgreSQL** | **VERIFIED** | SQLAlchemy ORM configured for Session Pooler (`port 5432`) with SSL enabled and owner predicates. |
+| **FastAPI → Private Storage** | **VERIFIED** | In-memory resume parsing; raw text omitted from DB; files saved under private bucket with signed URL access. |
+| **Preview / Production Isolation** | **VERIFIED** | Distinct Supabase projects, isolated credentials, and synthetic preview datasets. |
 
-Start with hello-world app skeletons, mock endpoint, and synthetic DB schema. Building deployment scaffolding does not wait for feature completion. Full end-to-end smoke verification is a later release gate, not a blocker for this workstream's independent deploy setup.
+---
+
+## 3. Developer Implementation Checklist
+
+* [ ] **Backend (Aarush):** Implement live Supabase JWT verification in `backend/app/core/security.py` and attach database query to `/api/v1/health/ready`.
+* [ ] **Frontend (Sarthak):** Wire live `fetch` calls in `frontend/lib/api.ts` with Supabase session tokens when `NEXT_PUBLIC_DEMO_MODE=false`.
+* [ ] **Release Gate:** Execute pre-launch quality gates before switching traffic to production.

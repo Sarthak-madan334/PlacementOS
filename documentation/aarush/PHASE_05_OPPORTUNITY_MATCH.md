@@ -27,3 +27,10 @@ An explicit, explainable comparison between student evidence and a target role o
 ## Independence contract
 
 Use hand-authored profile and JD JSON fixtures matching [`../../docs/SRD.md`](../../docs/SRD.md). This phase can run even if profile CRUD and parser are unfinished.
+
+## Implementation Status
+
+- **Status:** Implemented locally as part of the non-persistent assessment preview; tests pass.
+- **Behavior:** Explicit comma-separated required/preferred terms are supported. When required terms are omitted, supported aliases are detected in the description. Unknown explicitly supplied required terms remain visible and are not scored as missing skills.
+- **Eligibility:** Only explicit minimum CGPA, allowed branches, and eligible graduation years are evaluated. Missing values produce `unknown`; a known failed criterion produces `not_eligible`.
+- **Remaining:** Expand/review the small deterministic skill vocabulary, add dedicated preferred-term tests, and deploy/verify the independent API preview.

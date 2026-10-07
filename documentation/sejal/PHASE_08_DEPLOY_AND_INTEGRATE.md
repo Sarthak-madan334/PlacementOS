@@ -29,3 +29,9 @@ Prepare a repeatable path for each application component to deploy independently
 ## Independence contract
 
 Start with hello-world app skeletons, mock endpoint, and synthetic DB schema. Building deployment scaffolding does not wait for feature completion. Full end-to-end smoke verification is a later release gate, not a blocker for this workstream's independent deploy setup.
+
+## Implementation Status
+
+- **Implemented:** `.github/workflows/ci.yml` runs frontend typecheck/build and backend tests; `render.yaml` describes the API service; frontend and backend have health/demo paths; the integration checklist is in `docs/INTEGRATION_RUNBOOK.md`.
+- **Locally verified:** Frontend build and backend test suite pass. Local guest assessment/parser APIs are runnable without Supabase.
+- **Not yet complete:** No Vercel/Render/Supabase preview URLs or credentials are recorded. PostgreSQL readiness, provider-specific auth redirects/CORS, migrations, and the complete hosted smoke checklist need owner configuration and verification.

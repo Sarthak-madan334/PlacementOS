@@ -28,3 +28,12 @@ A pure, repeatable `cp-v1` readiness calculation that explains every output and 
 ## Independence contract
 
 Use normalized in-memory profile/evidence/opportunity objects. This workstream does not wait for parser output or persisted data; fixtures can represent confirmed data from any source.
+
+## Implementation Status
+
+- **Status:** Implemented locally; automated tests pass.
+- **Modules:** `backend/app/services/assessment.py`, `backend/app/api/v1/schemas/assessment.py`, and `backend/app/api/v1/endpoints/assessment.py`.
+- **Rules:** The `cp-v1` weights, unavailable-factor renormalization, confidence, eligibility separation, and recommendation rules are specified in [`../../docs/SCORING_AND_PARSING.md`](../../docs/SCORING_AND_PARSING.md).
+- **API:** `POST /api/v1/assessments/preview` computes a non-persistent guest preview. It is not the authenticated assessment-history endpoint in the SRD.
+- **Validation:** Empty profile, null role match, skill evidence, CGPA scale normalization, eligibility boundaries, and response shape have backend tests.
+- **Remaining:** Product review of heuristic thresholds; no prediction claims; persisted assessment history and deployed Render verification remain open.

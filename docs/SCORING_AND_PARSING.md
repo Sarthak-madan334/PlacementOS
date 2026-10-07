@@ -50,3 +50,23 @@ Rank no more than three actions using this ordered logic:
 5. Explain why each action is listed and what would count as completion evidence.
 
 Do not present estimated readiness-point increases until the team has outcome data and a documented validation method.
+
+### Implemented deterministic preview rules
+
+`backend/app/services/assessment.py` is the current reference implementation. These simple coaching heuristics are intentionally visible and are not empirically validated:
+
+- **Role skill coverage:** matched supported required skills divided by supported required skills. Skills can be entered explicitly or recognized from the role description. Unknown explicitly entered terms are returned separately and excluded from the denominator. Preferred terms do not affect this score.
+- **Project/work evidence:** average per-project rule score: 35 for a supplied project, +20 for a description of at least 20 words, +20 for a link, +15 for a quantified result, and +10 when a listed profile skill appears in the description; cap each project at 100.
+- **Resume clarity:** 25 points each for detected Education, Experience, Projects, and Skills sections. The factor is unavailable until a parse result is supplied; resume upload is optional.
+- **Technical skill evidence:** 40 points for at least one self-reported skill, plus 20 for each listed skill mentioned in project descriptions; cap at 100. This is not verification.
+- **Profile completeness:** 25 points each for target role, branch, graduation year, and at least one skill. CGPA, projects, and resume are not completeness requirements.
+- **Eligibility:** only explicit entered CGPA, branch, or graduation-year criteria are evaluated. CGPA values are compared as a proportion of their declared grading scales. A known failed rule takes precedence over missing values; otherwise missing required values return `unknown`.
+
+The API exposes these rules through `POST /api/v1/assessments/preview`. It is an unauthenticated, non-persistent guest preview and must receive synthetic data only. Persisted, authenticated assessment history remains unimplemented.
+
+## Public profile context
+
+- A submitted GitHub URL is validated as a `github.com/{username}` profile. The backend reports the public profile's repository count, summarizes primary-language labels across at most 100 recently updated public repositories owned by the user, and samples public push events for distinct visible commit SHAs. The event sample is bounded (one page, at most 100 events) and is not total commits, total contributions, or a skill-quality score. Private activity is not available. GitHub API failure does not block the assessment.
+- Optional `GITHUB_TOKEN` is a backend-only secret that can raise GitHub API rate limits. Never expose it in a `NEXT_PUBLIC_*` variable.
+- LinkedIn handling validates and echoes only an `linkedin.com/in/{profile}` URL. It does not fetch, scrape, or verify LinkedIn profile content or activity; “link detected” means only that a syntactically valid URL was supplied.
+- Profile-link results are returned with the non-persistent assessment response and are not saved. The UI must disclose that a user-submitted URL is checked when assessment runs.

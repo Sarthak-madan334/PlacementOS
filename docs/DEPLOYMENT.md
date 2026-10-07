@@ -11,7 +11,7 @@ GitHub main
 
 Use Supabase for this project’s database, authentication, and resume-file storage. Use separate Supabase projects for preview and production, with separate credentials and synthetic preview data. Do not use production student data in preview deployments.
 
-> **Current repository state:** This repository currently contains documentation only. Vercel and Render cannot serve the product until `frontend/` and `backend/` contain runnable applications and their dependency manifests. Do not report a live deployment until each provider URL has been verified.
+> **Current repository state:** Runnable frontend and backend apps, tests, a Render Blueprint, and a GitHub CI workflow are in source control. This does not prove provider deployment. No Vercel, Render, or Supabase preview URL has been recorded or end-to-end verified. Provider secrets, databases, auth settings, and deployment permissions still need an owner to configure them.
 
 ## 1. Create Supabase environments
 
@@ -46,10 +46,11 @@ Set Render environment variables through its environment/secret settings, not co
 
 - `APP_ENV=preview` or `production`
 - `DATABASE_URL` (Supabase URL selected for that environment; SSL enabled)
-- `AUTH_ISSUER_URL` and `AUTH_AUDIENCE` for Supabase Auth JWT verification
+- `AUTH_ISSUER_URL=https://<project-ref>.supabase.co/auth/v1` and `AUTH_AUDIENCE=authenticated` for Supabase Auth JWT verification. Asymmetric ES256/RS256 keys are verified using the issuer's JWKS; set `SUPABASE_JWT_SECRET` only for a project still using legacy HS256 signing.
 - `CORS_ORIGINS` with the exact corresponding Vercel origin(s)
 - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_STORAGE_BUCKET`
 - `MAX_RESUME_BYTES=5242880`
+- `GITHUB_TOKEN` — optional GitHub API token for public profile lookup rate limits; store only as a Render secret and omit it if unused.
 
 Use least privilege and a small SQLAlchemy connection pool. Run Alembic migrations as an explicit release step before code that depends on the changed schema. Verify `/health/live` and `/health/ready`, then check Render logs for startup or database errors.
 
@@ -83,7 +84,7 @@ Connect Vercel to GitHub so feature branches produce Preview deployments and `ma
 
 ## 5. Release verification
 
-1. Confirm the GitHub commit contains runnable `frontend/` and `backend/` applications and lock/dependency files.
+1. Confirm the GitHub commit contains runnable `frontend/` and `backend/` applications and lock/dependency files; require `.github/workflows/ci.yml` to pass.
 2. Apply migrations to the preview Supabase project.
 3. Deploy Render preview and verify readiness; record its URL.
 4. Deploy Vercel preview with the Render preview URL and preview Supabase public Auth settings.
@@ -100,4 +101,5 @@ The system is considered deployed only after frontend and backend URLs both work
 - [Render Blueprint specification](https://render.com/docs/blueprint-spec)
 - [Connect to Supabase Postgres](https://supabase.com/docs/guides/database/connecting-to-postgres)
 - [Supabase Auth redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)
+- [Supabase JWT signing keys and JWKS verification](https://supabase.com/docs/guides/auth/signing-keys)
 - [Supabase Storage bucket access models](https://supabase.com/docs/guides/storage/buckets/fundamentals)

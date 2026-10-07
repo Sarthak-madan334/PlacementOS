@@ -14,7 +14,19 @@ Open `http://localhost:3000`. For a production build, run `npm run typecheck` an
 
 ## Demo behavior
 
-`NEXT_PUBLIC_DEMO_MODE=true` (the default when unset) uses typed `cp-v1` synthetic data. The resume selector validates file type and size but does not upload or parse files. Profile changes are session-only. Set `NEXT_PUBLIC_API_BASE_URL` and disable demo mode only after the API assessment request contract and authentication flow are implemented and agreed with the backend owner.
+`NEXT_PUBLIC_DEMO_MODE=true` (the default when unset) uses typed `cp-v1` sample results. Profile changes are session-only, and selected files are not uploaded. This isolated fixture path works without the backend.
+
+### Connected local synthetic preview
+
+The backend now provides a stateless `POST /api/v1/assessments/preview` and an in-memory resume parser. To exercise them locally without configuring Supabase, start the backend from `backend/` as described in its README, then start the frontend with:
+
+```powershell
+$env:NEXT_PUBLIC_DEMO_MODE = "false"
+$env:NEXT_PUBLIC_API_BASE_URL = "http://localhost:8000"
+npm run dev -- --port 3001
+```
+
+This preview computes results from the entered profile, explicit required skills, and eligibility rules. Resume facts remain suggestions until copied into editable fields. The preview does not persist profile or resume data; use synthetic data only. The default fixture mode remains available for isolated frontend demos.
 
 ## Deploy
 

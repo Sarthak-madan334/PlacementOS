@@ -31,7 +31,7 @@ The parser accepts a file and returns candidate facts; it does not require profi
 
 ## Implementation Status
 
-- **Status**: COMPLETE
+- **Status**: Implemented and locally tested; deployed parser verification and private-storage integration remain open.
 - **Modules Created**:
   - `backend/app/adapters/parser/validator.py`: Format detection (PDF, DOCX, TXT magic bytes), 5 MiB size enforcement, empty and corrupt file handling.
   - `backend/app/adapters/parser/pdf_adapter.py`: PDF text extraction with page tracking via `pypdf`.

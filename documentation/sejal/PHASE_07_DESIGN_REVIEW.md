@@ -1,7 +1,7 @@
 # Phase 07: System, Security, and Data Design Validation
 
 **Owner:** Sejal
-**Status:** Completed
+**Status:** Design review documented; production configuration and provider claims are not verified.
 
 ## 1. Deployment Decision Record
 
@@ -50,5 +50,6 @@ The schema described in `ARCHITECTURE.md` has been reviewed against the required
 
 ## 6. Preview Environments
 
-- **Requirement Confirmed:** Vercel (frontend) and Render (backend) preview environments are configured to use separate credentials and isolated databases/storage. 
-- **Synthetic Data:** The Next.js frontend has a `NEXT_PUBLIC_DEMO_MODE` to run a full demonstration using synthetic fixtures when the backend is offline or unlinked. No production user data is ever exposed in preview environments.
+- **Required, not verified:** Vercel and Render preview environments must use separate credentials and isolated databases/storage. No hosted environment is claimed until its URL and smoke results are recorded.
+- **Synthetic Data:** The Next.js frontend has a `NEXT_PUBLIC_DEMO_MODE` fixture mode and a connected local guest preview. Do not submit real personal data to the unauthenticated preview endpoint.
+- **Open production checks:** Verify the cached Supabase JWKS verifier against the target project and rotation process, then confirm private Storage owner policies and deletion, retention, and least-privilege credentials before production.

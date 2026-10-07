@@ -31,7 +31,7 @@ Use curl/OpenAPI and synthetic users. No UI, resume parser, scoring service, or 
 
 ## Implementation Status
 
-- **Status**: COMPLETE
+- **Status**: Implemented and locally tested; PostgreSQL/Render deployment acceptance is not yet verified.
 - **Modules Created**:
   - `backend/app/main.py`: FastAPI application entrypoint with CORS, OpenAPI at `/api/v1/openapi.json`, and lifespan table initialization.
   - `backend/app/core/config.py`: Environment configuration for DB, CORS, Auth, and upload bounds.

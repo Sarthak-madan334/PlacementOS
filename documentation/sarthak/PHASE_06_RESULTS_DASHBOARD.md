@@ -27,3 +27,10 @@ A readable results experience that helps a student understand eligibility, evide
 ## Independence contract
 
 Use fixture objects validated against [`../../docs/SRD.md`](../../docs/SRD.md). Do not wait for scoring, matching, storage, or database implementation.
+
+## Implementation Status
+
+- **Status:** Local UI is implemented; fixture results and connected non-persistent preview responses are supported.
+- **Behavior:** Connected mode submits current profile, reviewed resume sections, required/preferred skills, and explicit eligibility criteria. Assessment errors keep the in-session entries available for retry.
+- **Fixture disclosure:** Fixture mode explicitly identifies its result as a sample and warns that edited entries do not personalize the fixed sample score.
+- **Remaining:** Add automated browser/UI coverage for unknown, ineligible, sparse, API-error, stale-result, and parsing-warning states; persisted history requires the future authenticated assessment route.

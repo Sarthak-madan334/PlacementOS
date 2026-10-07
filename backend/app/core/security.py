@@ -1,8 +1,10 @@
 """Authentication, JWT verification, and user identity resolution."""
 
+from functools import lru_cache
 from typing import Optional
 import jwt
-from jwt.exceptions import PyJWTError
+from jwt import PyJWKClient
+from jwt.exceptions import PyJWKClientError, PyJWTError
 from fastapi import Depends, Header, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -11,6 +13,11 @@ from app.adapters.db.models import User
 from app.adapters.db.session import get_db
 from app.core.config import settings
 from app.core.exceptions import UnauthorizedException
+
+
+@lru_cache(maxsize=8)
+def get_jwks_client(url: str) -> PyJWKClient:
+    return PyJWKClient(url, cache_keys=True, timeout=5, lifespan=600)
 
 
 def extract_bearer_token(authorization: Optional[str] = Header(None)) -> str:
@@ -36,28 +43,41 @@ def verify_jwt_token(token: str) -> dict:
             "email": f"{token}@example.com" if "@" not in token else token,
         }
 
-    # If mock auth is not enabled, require valid JWT configuration and decode
     if not settings.SUPABASE_JWT_SECRET and not settings.AUTH_ISSUER_URL:
         raise UnauthorizedException("Authentication service is not configured", code="auth_not_configured")
 
-    # Standard JWT validation with Supabase or configured issuer
     try:
+        header = jwt.get_unverified_header(token)
+        algorithm = header.get("alg")
+        if algorithm == "HS256":
+            if not settings.SUPABASE_JWT_SECRET:
+                raise UnauthorizedException("Legacy JWT verification is not configured", code="auth_not_configured")
+            verification_key = settings.SUPABASE_JWT_SECRET
+        elif algorithm in ("ES256", "RS256"):
+            if not settings.AUTH_ISSUER_URL:
+                raise UnauthorizedException("JWT issuer is not configured", code="auth_not_configured")
+            jwks_url = f"{settings.AUTH_ISSUER_URL.rstrip('/')}/.well-known/jwks.json"
+            verification_key = get_jwks_client(jwks_url).get_signing_key_from_jwt(token).key
+        else:
+            raise UnauthorizedException("Unsupported JWT signing algorithm", code="unauthorized")
+
         decode_kwargs = {
-            "algorithms": ["HS256", "RS256"],
-            "options": {"verify_exp": True, "verify_sub": True},
+            "algorithms": [algorithm],
+            "options": {"verify_exp": True, "verify_sub": True, "require": ["exp", "sub"]},
         }
         if settings.AUTH_AUDIENCE:
             decode_kwargs["audience"] = settings.AUTH_AUDIENCE
         if settings.AUTH_ISSUER_URL:
             decode_kwargs["issuer"] = settings.AUTH_ISSUER_URL
 
-        secret = settings.SUPABASE_JWT_SECRET or ""
-        payload = jwt.decode(token, secret, **decode_kwargs)
+        payload = jwt.decode(token, verification_key, **decode_kwargs)
         if not payload.get("sub"):
             raise UnauthorizedException("Token missing subject (sub) claim", code="unauthorized")
         return payload
-    except PyJWTError as e:
-        raise UnauthorizedException(f"Invalid authentication token: {str(e)}", code="unauthorized")
+    except UnauthorizedException:
+        raise
+    except (PyJWTError, PyJWKClientError):
+        raise UnauthorizedException("Invalid authentication token", code="unauthorized")
 
 
 def get_current_user(

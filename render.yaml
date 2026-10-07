@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: campusproof-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health/ready
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: AUTH_ISSUER_URL
+        sync: false
+      - key: AUTH_AUDIENCE
+        value: authenticated

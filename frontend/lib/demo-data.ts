@@ -8,6 +8,8 @@ export const demoProfile: StudentProfile = {
   role: "Frontend Engineer",
   skills: "TypeScript, React, JavaScript, CSS, Git",
   project: "Built a responsive campus events dashboard with React and a REST API.",
+  githubUrl: "",
+  linkedinUrl: "",
 };
 
 export const demoAssessment: Assessment = {
@@ -27,6 +29,10 @@ export const demoAssessment: Assessment = {
     excluded_factors: [],
   },
   role_match: { score: 78, matched: ["TypeScript", "React", "JavaScript"], missing: ["Testing"], unknown: ["Accessibility"] },
+  profile_links: {
+    github: { status: "not_provided", profile_url: null, public_repositories: null, recent_public_commits: null, activity_window_days: 90, languages: [], note: "No GitHub profile was supplied." },
+    linkedin: { status: "not_provided", profile_url: null, note: "No LinkedIn profile URL was supplied. LinkedIn activity is not scraped." },
+  },
   strengths: [
     { label: "React", evidence: "Listed in profile and supported by a project description", confidence: "medium" },
     { label: "Project delivery", evidence: "Responsive dashboard described with a REST API", confidence: "medium" },

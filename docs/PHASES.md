@@ -19,6 +19,21 @@ Every workstream must finish as a runnable, testable, independently demonstrable
 
 Each phase brief is stored in its owner's folder so independent edits stay separated.
 
+## Current delivery status
+
+| Phase | Current status | Remaining release gate |
+|---|---|---|
+| 01 | Frontend screens and fixture journey build locally; connected mode can call the guest assessment/parser API. | Vercel preview, 360 px/accessibility review, and UI-state tests. |
+| 02 | Profile API, migrations, ownership checks, and automated tests are implemented. | Verify against clean PostgreSQL and a Render preview with real Supabase JWT configuration. |
+| 03 | PDF/DOCX/TXT parser, bounded upload read, fixtures/tests, and review UI are implemented. | Verify deployed endpoint and real-world synthetic files; private storage and authenticated uploads remain future work. |
+| 04 | Deterministic `cp-v1` assessment rules and tests are implemented. | Domain review/validation and any revised product-approved rule thresholds. |
+| 05 | Required/preferred skill comparison and explicit eligibility checks are implemented in the preview endpoint. | Broader vocabulary review and dedicated required/preferred boundary tests. |
+| 06 | Result UI renders API response and preserves a separate sample-fixture mode. | Cover every SRD state with UI tests and connect authenticated saved profiles/history. |
+| 07 | Design decisions and risk review are documented; JWT verification supports cached Supabase JWKS and legacy HS256. | Verify against the target project's real signing keys/rotation, configure provider secrets, and implement/verify storage cleanup and retention before production. |
+| 08 | CI, Render Blueprint, health endpoints, and integration checklist are present. | Configure Vercel/Render/Supabase projects and secrets, deploy, then record public URLs and smoke results. |
+
+Local validation on the current checkout: frontend production build passes; backend test suite passes. A local connected synthetic journey is demonstrable without Supabase. Hosted deployments are not claimed until their release gates above are verified.
+
 ## Definition of done for every phase
 
 1. Scope and acceptance checks in its phase brief are met.

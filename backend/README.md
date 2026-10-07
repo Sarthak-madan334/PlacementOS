@@ -15,7 +15,10 @@ FastAPI service for profile evidence, resume analysis, deterministic readiness, 
 ### 1. Install Dependencies
 
 ```bash
-pip install -r backend/requirements.txt
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
 ### 2. Configure Environment
@@ -23,19 +26,21 @@ pip install -r backend/requirements.txt
 Copy `.env.example` to `.env` and set environment variables:
 
 ```bash
-cp backend/.env.example backend/.env
+cp .env.example .env
 ```
+
+`ALLOW_MOCK_AUTH=true` is included only for local synthetic profile API tests. The backend ignores mock authentication outside `APP_ENV=local` or `test`. Never enable it on a deployed service.
 
 ### 3. Run Database Migrations
 
 ```bash
-python -m alembic -c backend/alembic.ini upgrade head
+python -m alembic -c alembic.ini upgrade head
 ```
 
 ### 4. Start the Development Server
 
 ```bash
-python -m uvicorn app.main:app --app-dir backend --reload --port 8000
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
 OpenAPI docs will be available at: `http://localhost:8000/api/v1/docs`.
@@ -52,6 +57,7 @@ OpenAPI docs will be available at: `http://localhost:8000/api/v1/docs`.
 | `PUT` | `/api/v1/me/profile` | Idempotently create/update profile, skills, projects | Yes (`Bearer <token>`) |
 | `DELETE` | `/api/v1/me/profile` | Delete profile and associated evidence records | Yes (`Bearer <token>`) |
 | `POST` | `/api/v1/resumes/parse` | Parse uploaded resume (PDF, DOCX, TXT) for review | No |
+| `POST` | `/api/v1/assessments/preview` | Compute a non-persistent guest assessment from supplied synthetic profile/role data | No |
 
 ---
 
@@ -67,11 +73,13 @@ python -m app.cli.parse_resume fixtures/resumes/sample_resume.txt
 
 ## Testing
 
-Run the automated test suite:
+Run the automated test suite from the repository root:
 
 ```bash
 python -m pytest backend/tests -v
 ```
+
+The assessment preview is intentionally not persisted and has no account-history endpoint. Use synthetic data in guest/preview mode; authenticated profile persistence and saved assessment history are separate release work.
 
 ---
 

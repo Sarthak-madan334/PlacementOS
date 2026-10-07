@@ -109,6 +109,38 @@ def test_jwt_valid_signature_verification(client: TestClient):
         settings.ALLOW_MOCK_AUTH = orig_mock
 
 
+def test_supabase_asymmetric_jwt_uses_issuer_jwks(client: TestClient, monkeypatch):
+    import time
+    import jwt
+    from types import SimpleNamespace
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import ec
+    from app.core import security
+    from app.core.config import settings
+
+    private_key = ec.generate_private_key(ec.SECP256R1())
+    private_pem = private_key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption())
+    public_pem = private_key.public_key().public_bytes(serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo)
+    jwks_client = SimpleNamespace(get_signing_key_from_jwt=lambda token: SimpleNamespace(key=public_pem))
+    requested_urls = []
+    monkeypatch.setattr(security, "get_jwks_client", lambda url: (requested_urls.append(url), jwks_client)[1])
+    original = (settings.APP_ENV, settings.AUTH_ISSUER_URL, settings.AUTH_AUDIENCE, settings.SUPABASE_JWT_SECRET, settings.ALLOW_MOCK_AUTH)
+    issuer = "https://example.supabase.co/auth/v1"
+    try:
+        settings.APP_ENV = "production"
+        settings.AUTH_ISSUER_URL = issuer
+        settings.AUTH_AUDIENCE = "authenticated"
+        settings.SUPABASE_JWT_SECRET = None
+        settings.ALLOW_MOCK_AUTH = False
+        token = jwt.encode({"sub": "asymmetric-user", "iss": issuer, "aud": "authenticated", "exp": int(time.time()) + 600}, private_pem, algorithm="ES256", headers={"kid": "test-key"})
+        response = client.get("/api/v1/me/profile", headers={"Authorization": f"Bearer {token}"})
+        assert response.status_code == 404
+        assert response.json()["code"] == "profile_not_found"
+        assert requested_urls == [f"{issuer}/.well-known/jwks.json"]
+    finally:
+        settings.APP_ENV, settings.AUTH_ISSUER_URL, settings.AUTH_AUDIENCE, settings.SUPABASE_JWT_SECRET, settings.ALLOW_MOCK_AUTH = original
+
+
 def test_jwt_expired_token_rejected(client: TestClient):
     """Expired JWT is rejected with 401."""
     import jwt

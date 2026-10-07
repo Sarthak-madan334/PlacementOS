@@ -1,4 +1,4 @@
-# PlacementOS — Backend Service (Aarush)
+# PlacementOS — Backend Service
 
 FastAPI service for profile evidence, resume analysis, deterministic readiness, and role matching.
 

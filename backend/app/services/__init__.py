@@ -1,5 +1,47 @@
 """Backend domain services."""
 
+from app.services.readiness_engine import (
+    FACTOR_WEIGHTS,
+    SCORING_VERSION,
+    SKILL_ALIASES_V1,
+    AssessmentReport,
+    EligibilityReason,
+    EligibilityResult,
+    FactorEvaluation,
+    GapItem,
+    NextAction,
+    OpportunityRequirement,
+    ProjectEvidence,
+    ReadinessEngine,
+    ReadinessResult,
+    ResumeEvidence,
+    RoleMatchResult,
+    SkillEvidence,
+    StrengthItem,
+    StudentProfileEvidence,
+    normalize_skill_name,
+)
 from app.services.resume_parser import parse_resume_bytes
 
-__all__ = ["parse_resume_bytes"]
+__all__ = [
+    "parse_resume_bytes",
+    "ReadinessEngine",
+    "SCORING_VERSION",
+    "FACTOR_WEIGHTS",
+    "SKILL_ALIASES_V1",
+    "normalize_skill_name",
+    "StudentProfileEvidence",
+    "SkillEvidence",
+    "ProjectEvidence",
+    "ResumeEvidence",
+    "OpportunityRequirement",
+    "FactorEvaluation",
+    "EligibilityReason",
+    "EligibilityResult",
+    "RoleMatchResult",
+    "StrengthItem",
+    "GapItem",
+    "NextAction",
+    "ReadinessResult",
+    "AssessmentReport",
+]

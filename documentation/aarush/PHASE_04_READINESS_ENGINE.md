@@ -28,3 +28,20 @@ A pure, repeatable `cp-v1` readiness calculation that explains every output and 
 ## Independence contract
 
 Use normalized in-memory profile/evidence/opportunity objects. This workstream does not wait for parser output or persisted data; fixtures can represent confirmed data from any source.
+
+## Implementation Status
+
+- **Status**: COMPLETE
+- **Model Version**: `cp-v1`
+- **Modules Created**:
+  - `backend/app/services/readiness_engine.py`: Pure deterministic scoring engine implementing `cp-v1` factor weights, renormalization over missing factors, separate hard eligibility check, and gap-based action generation.
+  - `backend/app/adapters/db/models.py`: Added SQLAlchemy 2.x `Opportunity` and `Assessment` models.
+  - `backend/app/api/v1/schemas/opportunity.py`: Pydantic request and response contracts for saving/viewing opportunities.
+  - `backend/app/api/v1/schemas/assessment.py`: Pydantic request and response schemas matching the exact SRD specification.
+  - `backend/app/api/v1/endpoints/opportunity.py`: Owner-isolated CRUD endpoints for opportunities (`/api/v1/opportunities`).
+  - `backend/app/api/v1/endpoints/assessment.py`: Assessment evaluation and persistence endpoints (`/api/v1/assessments`).
+  - `backend/app/cli/evaluate_readiness.py`: CLI tool for evaluating readiness deterministically from JSON / resume files.
+  - `backend/migrations/versions/002_add_opportunities_and_assessments.py`: Alembic migration for opportunities and assessments tables.
+  - `backend/fixtures/synthetic_assessments.json`: Fixtures covering full matches, high CGPA without skills, low CGPA with strong skills, hard CGPA rule failures, and missing criteria.
+  - `backend/tests/test_readiness_engine.py`: Comprehensive unit tests covering all 5 factors, weight renormalization, determinism, CGPA independence, eligibility, and recommendations.
+  - `backend/tests/test_assessment_api.py`: API tests for assessment creation, retrieval, and cross-user ownership isolation.

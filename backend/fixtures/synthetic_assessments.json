@@ -1,0 +1,133 @@
+{
+  "scenarios": [
+    {
+      "name": "full_match_high_readiness",
+      "description": "Student with strong projects, matching skills, structured resume, and valid eligibility",
+      "profile": {
+        "full_name": "Aarush Sharma",
+        "branch": "Computer Science",
+        "graduation_year": 2026,
+        "cgpa": 8.75,
+        "cgpa_scale": 10.0,
+        "target_role": "Backend Engineer",
+        "skills": [
+          {"display_name": "Python", "normalized_name": "python", "self_reported_level": "advanced"},
+          {"display_name": "FastAPI", "normalized_name": "fastapi", "self_reported_level": "advanced"},
+          {"display_name": "PostgreSQL", "normalized_name": "postgresql", "self_reported_level": "intermediate"},
+          {"display_name": "Docker", "normalized_name": "docker", "self_reported_level": "intermediate"}
+        ],
+        "projects": [
+          {
+            "title": "PlacementOS Backend",
+            "description": "Designed deterministic readiness engine and REST APIs with FastAPI, PostgreSQL, and Docker.",
+            "url": "https://github.com/Sarthak-madan334/PlacementOS"
+          },
+          {
+            "title": "Resume Parser Service",
+            "description": "Implemented multi-format PDF and DOCX extraction with quality signal scoring.",
+            "url": "https://github.com/Sarthak-madan334/PlacementOS/tree/main/backend"
+          }
+        ]
+      },
+      "opportunity": {
+        "role_title": "Backend Software Engineer",
+        "company": "Tech Corp",
+        "required_skills": ["Python", "FastAPI", "PostgreSQL"],
+        "explicit_criteria": {
+          "min_cgpa": 7.5,
+          "allowed_branches": ["Computer Science", "Information Technology"],
+          "allowed_years": [2026, 2027]
+        }
+      }
+    },
+    {
+      "name": "high_cgpa_missing_skills",
+      "description": "High CGPA student without required role skills (proves CGPA does not inflate readiness)",
+      "profile": {
+        "full_name": "Rohan Verma",
+        "branch": "Mechanical Engineering",
+        "graduation_year": 2026,
+        "cgpa": 9.85,
+        "cgpa_scale": 10.0,
+        "target_role": "Backend Engineer",
+        "skills": [],
+        "projects": []
+      },
+      "opportunity": {
+        "role_title": "Backend Software Engineer",
+        "required_skills": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+        "explicit_criteria": {}
+      }
+    },
+    {
+      "name": "low_cgpa_strong_developer",
+      "description": "Low CGPA student with strong skills and projects (proves CGPA does not penalize readiness score)",
+      "profile": {
+        "full_name": "Devansh Roy",
+        "branch": "Computer Science",
+        "graduation_year": 2026,
+        "cgpa": 6.20,
+        "cgpa_scale": 10.0,
+        "target_role": "Backend Engineer",
+        "skills": [
+          {"display_name": "Python", "normalized_name": "python"},
+          {"display_name": "FastAPI", "normalized_name": "fastapi"},
+          {"display_name": "SQL", "normalized_name": "sql"}
+        ],
+        "projects": [
+          {
+            "title": "Scalable Microservice",
+            "description": "High-throughput API handling 10k requests per second with Python and FastAPI.",
+            "url": "https://github.com/example/api"
+          }
+        ]
+      },
+      "opportunity": {
+        "role_title": "Backend Engineer",
+        "required_skills": ["Python", "FastAPI"],
+        "explicit_criteria": {}
+      }
+    },
+    {
+      "name": "failing_hard_cgpa_eligibility",
+      "description": "Student fails explicit minimum CGPA threshold (eligibility is not_eligible, readiness calculated separately)",
+      "profile": {
+        "full_name": "Karan Singh",
+        "branch": "Computer Science",
+        "graduation_year": 2026,
+        "cgpa": 7.10,
+        "cgpa_scale": 10.0,
+        "target_role": "Data Engineer",
+        "skills": [{"display_name": "Python"}, {"display_name": "SQL"}],
+        "projects": [{"title": "Data Pipeline", "description": "ETL pipeline", "url": "https://github.com/data"}]
+      },
+      "opportunity": {
+        "role_title": "Data Engineer",
+        "required_skills": ["Python", "SQL"],
+        "explicit_criteria": {
+          "min_cgpa": 8.0
+        }
+      }
+    },
+    {
+      "name": "missing_cgpa_with_requirement",
+      "description": "Student has no CGPA entered when opportunity requires minimum CGPA (eligibility is unknown)",
+      "profile": {
+        "full_name": "Neha Gupta",
+        "branch": "Computer Science",
+        "graduation_year": 2026,
+        "cgpa": null,
+        "target_role": "Software Engineer",
+        "skills": [{"display_name": "Java"}],
+        "projects": []
+      },
+      "opportunity": {
+        "role_title": "Software Engineer",
+        "required_skills": ["Java"],
+        "explicit_criteria": {
+          "min_cgpa": 7.0
+        }
+      }
+    }
+  ]
+}

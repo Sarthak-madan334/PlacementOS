@@ -9,6 +9,7 @@ from sqlalchemy import (
     Float,
     ForeignKey,
     Integer,
+    JSON,
     String,
     Text,
     UniqueConstraint,
@@ -75,6 +76,16 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    opportunities: Mapped[List["Opportunity"]] = relationship(
+        "Opportunity",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    assessments: Mapped[List["Assessment"]] = relationship(
+        "Assessment",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
 
 
 class StudentProfile(Base):
@@ -110,6 +121,11 @@ class StudentProfile(Base):
         back_populates="profile",
         cascade="all, delete-orphan",
         order_by="Project.created_at",
+    )
+    assessments: Mapped[List["Assessment"]] = relationship(
+        "Assessment",
+        back_populates="profile",
+        cascade="all, delete-orphan",
     )
 
 
@@ -177,3 +193,69 @@ class ProfileFile(Base):
 
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="files")
+
+
+class Opportunity(Base):
+    __tablename__ = "opportunities"
+
+    id: Mapped[uuid.UUID] = mapped_column(GUID, primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        GUID,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    company: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    role_title: Mapped[str] = mapped_column(String(255), nullable=False)
+    jd_text: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    required_skills: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    preferred_skills: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    explicit_criteria: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    # Relationships
+    user: Mapped["User"] = relationship("User", back_populates="opportunities")
+    assessments: Mapped[List["Assessment"]] = relationship(
+        "Assessment",
+        back_populates="opportunity",
+        cascade="all, delete-orphan",
+    )
+
+
+class Assessment(Base):
+    __tablename__ = "assessments"
+
+    id: Mapped[uuid.UUID] = mapped_column(GUID, primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        GUID,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    profile_id: Mapped[uuid.UUID] = mapped_column(
+        GUID,
+        ForeignKey("student_profiles.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+    )
+    opportunity_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        GUID,
+        ForeignKey("opportunities.id", ondelete="SET NULL"),
+        index=True,
+        nullable=True,
+    )
+    eligibility_result: Mapped[dict] = mapped_column(JSON, nullable=False)
+    readiness_result: Mapped[dict] = mapped_column(JSON, nullable=False)
+    role_match_result: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    strengths: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    gaps: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    next_actions: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
+    scoring_version: Mapped[str] = mapped_column(String(50), default="cp-v1", nullable=False)
+    input_snapshot: Mapped[dict] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    # Relationships
+    user: Mapped["User"] = relationship("User", back_populates="assessments")
+    profile: Mapped["StudentProfile"] = relationship("StudentProfile", back_populates="assessments")
+    opportunity: Mapped[Optional["Opportunity"]] = relationship("Opportunity", back_populates="assessments")

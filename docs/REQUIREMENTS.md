@@ -16,8 +16,8 @@ This document gives a compact, testable requirements checklist. `SRD.md` remains
 
 | ID | Requirement | Owner / trace |
 |---|---|---|
-| SYS-01 | Browser UI uses Next.js + TypeScript and deploys independently to Vercel. | Sarthak; [`FRONTEND.md`](../sarthak/FRONTEND.md), Phase 01 and 06 |
-| SYS-02 | API uses FastAPI + Python and deploys independently to Render. | Aarush; [`BACKEND.md`](../aarush/BACKEND.md), Phases 02–05 |
+| SYS-01 | Browser UI uses Next.js + TypeScript and deploys independently to Vercel. | Sarthak; [`FRONTEND.md`](../documentation/sarthak/FRONTEND.md), Phase 01 and 06 |
+| SYS-02 | API uses FastAPI + Python and deploys independently to Render. | Aarush; [`BACKEND.md`](../documentation/aarush/BACKEND.md), Phases 02–05 |
 | SYS-03 | PostgreSQL is the durable source of truth; changes use migrations. | Shared; `ARCHITECTURE.md`, `BACKEND.md` |
 | SYS-04 | PDF/DOCX/TXT resume parsing returns reviewable candidates and warnings. | Aarush; `SCORING_AND_PARSING.md`, Phase 03 |
 | SYS-05 | `cp-v1` scoring and role matching are deterministic, bounded, and explainable. | Aarush; `SRD.md`, `SCORING_AND_PARSING.md`, Phases 04–05 |

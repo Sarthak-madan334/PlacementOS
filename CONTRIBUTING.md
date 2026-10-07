@@ -5,7 +5,7 @@
 - Sarthak works in `documentation/sarthak/`.
 - Aarush works in `documentation/aarush/`.
 - Sejal works in `documentation/sejal/`.
-- Shared product and interface contracts live in `documentation/shared/`.
+- Shared product and interface contracts live in `docs/`.
 
 Keep member-specific edits in the assigned folder. If a task requires changing a shared contract, propose the change in the relevant shared document and update affected member docs/fixtures in the same pull request. Avoid editing another member's phase file unless coordinating the change with them.
 
@@ -25,4 +25,4 @@ GitHub permissions apply to the repository, not individual folders. Each member 
 - Keep filenames descriptive and inside the assigned directory.
 - Use relative Markdown links and verify they resolve before opening a pull request.
 - Keep examples synthetic; never commit real resumes, credentials, or student records.
-- Update `documentation/shared/PHASES.md` if a phase name, owner, or deliverable changes.
+- Update `docs/PHASES.md` if a phase name, owner, or deliverable changes.

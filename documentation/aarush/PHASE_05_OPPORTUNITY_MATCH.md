@@ -26,4 +26,4 @@ An explicit, explainable comparison between student evidence and a target role o
 
 ## Independence contract
 
-Use hand-authored profile and JD JSON fixtures matching [`../shared/SRD.md`](../shared/SRD.md). This phase can run even if profile CRUD and parser are unfinished.
+Use hand-authored profile and JD JSON fixtures matching [`../../docs/SRD.md`](../../docs/SRD.md). This phase can run even if profile CRUD and parser are unfinished.

@@ -2,4 +2,4 @@
 
 PlacementOS is the broader idea behind CampusProof: a student placement-readiness system that turns profile and resume evidence into role-specific gaps and practical next steps.
 
-Project documentation is organized under [`documentation/`](documentation/README.md). Start with the shared product requirements, then consult your member-owned phase folder. Collaboration and branch guidance is in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Shared product and technical specifications live in [`docs/`](docs/README.md). Member-owned phase briefs remain under [`documentation/`](documentation/README.md). Collaboration and branch guidance is in [`CONTRIBUTING.md`](CONTRIBUTING.md).

@@ -6,7 +6,7 @@
 
 ## Outcome
 
-Prepare a repeatable path for each application component to deploy independently and for compatible versions to connect in an isolated preview. It does not own unfinished feature implementation. Follow [`../shared/DEPLOYMENT.md`](../shared/DEPLOYMENT.md) for provider-specific setup.
+Prepare a repeatable path for each application component to deploy independently and for compatible versions to connect in an isolated preview. It does not own unfinished feature implementation. Follow [`../../docs/DEPLOYMENT.md`](../../docs/DEPLOYMENT.md) for provider-specific setup.
 
 ## Build
 
@@ -15,7 +15,7 @@ Prepare a repeatable path for each application component to deploy independently
 - Define exact CORS origin configuration and API base URL per environment.
 - Provision a non-production PostgreSQL database and private storage bucket; use separate credentials and synthetic records.
 - Add a GitHub workflow for lint/type/build/backend tests and migration checks. Keep provider deploy steps documented and reproducible.
-- Add the integration smoke script/checklist in [`../shared/INTEGRATION_RUNBOOK.md`](../shared/INTEGRATION_RUNBOOK.md).
+- Add the integration smoke script/checklist in [`../../docs/INTEGRATION_RUNBOOK.md`](../../docs/INTEGRATION_RUNBOOK.md).
 - Record deployed commit, migration revision, preview URLs, and pass/fail status for each release candidate.
 
 ## Acceptance

@@ -1,7 +1,7 @@
 # Aarush — Phase 02: Profile and Evidence API
 
 **Owner:** Aarush
-**Can start:** Immediately, using the profile schema in [`../shared/ARCHITECTURE.md`](../shared/ARCHITECTURE.md)
+**Can start:** Immediately, using the profile schema in [`../../docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md)
 **Deployable result:** FastAPI preview on Render
 
 ## Outcome
@@ -10,7 +10,7 @@ A small owner-scoped API for student profile, skills, and projects. It runs inde
 
 ## Build
 
-- Create FastAPI app with `/health/live`, `/health/ready`, and `/api/v1/me/profile` GET/PUT/DELETE routes as specified in [`../shared/SRD.md`](../shared/SRD.md).
+- Create FastAPI app with `/health/live`, `/health/ready`, and `/api/v1/me/profile` GET/PUT/DELETE routes as specified in [`../../docs/SRD.md`](../../docs/SRD.md).
 - Use Pydantic request/response schemas; validate graduation year, CGPA bounds/scale, string lengths, project URLs, and skill names.
 - Persist through SQLAlchemy 2.x and Alembic; add owner foreign keys, uniqueness and indexes.
 - Use managed identity validation for persisted profile endpoints. Owner ID comes only from verified identity context.

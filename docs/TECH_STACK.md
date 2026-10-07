@@ -28,4 +28,4 @@ Use **Supabase PostgreSQL + Supabase Auth + private Supabase Storage**, **Next.j
 
 ## Service boundaries
 
-The browser calls FastAPI over HTTPS using the `/api/v1` contract in `SRD.md`. FastAPI owns authoritative validation and scores. Supabase PostgreSQL stores structured user data and assessments; Supabase Storage holds private resume files. See `ARCHITECTURE.md`, [`../aarush/BACKEND.md`](../aarush/BACKEND.md), [`../sarthak/FRONTEND.md`](../sarthak/FRONTEND.md), and [`DEPLOYMENT.md`](DEPLOYMENT.md) for implementation details.
+The browser calls FastAPI over HTTPS using the `/api/v1` contract in `SRD.md`. FastAPI owns authoritative validation and scores. Supabase PostgreSQL stores structured user data and assessments; Supabase Storage holds private resume files. See `ARCHITECTURE.md`, [`../documentation/aarush/BACKEND.md`](../documentation/aarush/BACKEND.md), [`../documentation/sarthak/FRONTEND.md`](../documentation/sarthak/FRONTEND.md), and [`DEPLOYMENT.md`](DEPLOYMENT.md) for implementation details.

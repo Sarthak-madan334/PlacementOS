@@ -10,9 +10,9 @@ A polished CampusProof Next.js + TypeScript shell that communicates role-specifi
 
 ## Build
 
-- Set up Next.js app structure, shared layout, navigation, typography, color tokens, spacing, glass surfaces, buttons, cards, form controls, badges, and accessible focus states from [`../shared/DESIGN.md`](../shared/DESIGN.md).
+- Set up Next.js app structure, shared layout, navigation, typography, color tokens, spacing, glass surfaces, buttons, cards, form controls, badges, and accessible focus states from [`../../docs/DESIGN.md`](../../docs/DESIGN.md).
 - Add landing/demo entry, profile setup, resume review, opportunity setup, and results routes. Screens may use fixtures at this phase.
-- Add explicit fixture mode (`NEXT_PUBLIC_DEMO_MODE`) and typed fixture data matching [`../shared/SRD.md`](../shared/SRD.md).
+- Add explicit fixture mode (`NEXT_PUBLIC_DEMO_MODE`) and typed fixture data matching [`../../docs/SRD.md`](../../docs/SRD.md).
 - Implement responsive layout starting at 360 px; support keyboard navigation and reduced motion.
 - Add loading, empty, validation, parse failure, API unavailable, unknown eligibility, not-eligible, and success states.
 

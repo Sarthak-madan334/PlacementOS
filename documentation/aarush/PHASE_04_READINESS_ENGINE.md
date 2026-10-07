@@ -10,7 +10,7 @@ A pure, repeatable `cp-v1` readiness calculation that explains every output and 
 
 ## Build
 
-- Implement `cp-v1` factor weights exactly as in [`../shared/SRD.md`](../shared/SRD.md): role skill coverage 30%, demonstrated project/work evidence 25%, resume clarity/completeness 20%, technical skill evidence 15%, profile completeness 10%.
+- Implement `cp-v1` factor weights exactly as in [`../../docs/SRD.md`](../../docs/SRD.md): role skill coverage 30%, demonstrated project/work evidence 25%, resume clarity/completeness 20%, technical skill evidence 15%, profile completeness 10%.
 - Each factor returns score, weight, availability, evidence references, and an explanation. If unavailable, exclude and renormalize over available factor weights; list excluded factors and reduce confidence.
 - Keep hard eligibility separate from readiness arithmetic. CGPA affects eligibility only when explicit criteria are provided.
 - Define confidence from evidence source quality; missing data yields unknown/unavailable, not a fabricated zero or confirmed inability.

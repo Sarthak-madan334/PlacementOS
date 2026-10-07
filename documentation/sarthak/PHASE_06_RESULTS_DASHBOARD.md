@@ -1,7 +1,7 @@
 # Sarthak — Phase 06: Results Dashboard and Action Plan
 
 **Owner:** Sarthak
-**Can start:** Immediately, with fixtures from [`../shared/SRD.md`](../shared/SRD.md)
+**Can start:** Immediately, with fixtures from [`../../docs/SRD.md`](../../docs/SRD.md)
 **Deployable result:** Vercel preview
 
 ## Outcome
@@ -26,4 +26,4 @@ A readable results experience that helps a student understand eligibility, evide
 
 ## Independence contract
 
-Use fixture objects validated against [`../shared/SRD.md`](../shared/SRD.md). Do not wait for scoring, matching, storage, or database implementation.
+Use fixture objects validated against [`../../docs/SRD.md`](../../docs/SRD.md). Do not wait for scoring, matching, storage, or database implementation.

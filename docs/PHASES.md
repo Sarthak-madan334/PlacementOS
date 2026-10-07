@@ -8,14 +8,14 @@ Every workstream must finish as a runnable, testable, independently demonstrable
 
 | Phase | Deliverable | Owner | Independent demonstration |
 |---|---|---|---|
-| 01 | [Sarthak — Product shell and responsive design system](../sarthak/PHASE_01_PRODUCT_SHELL.md) | Sarthak | Vercel preview with navigable screens and fixture mode |
-| 02 | [Aarush — Profile and evidence API](../aarush/PHASE_02_PROFILE_EVIDENCE_API.md) | Aarush | Render preview; API requests against isolated PostgreSQL or local synthetic mode |
-| 03 | [Aarush — Resume parsing and review contract](../aarush/PHASE_03_RESUME_PARSER.md) | Aarush | Stand-alone parser API/demo with sample files and no database requirement |
-| 04 | [Aarush — Explainable readiness scoring engine](../aarush/PHASE_04_READINESS_ENGINE.md) | Aarush | Deterministic CLI/API demo with fixtures and unit tests |
-| 05 | [Aarush — Opportunity and role matching](../aarush/PHASE_05_OPPORTUNITY_MATCH.md) | Aarush | Stand-alone API/demo with fixture profiles and JDs |
-| 06 | [Sarthak — Results dashboard and action plan](../sarthak/PHASE_06_RESULTS_DASHBOARD.md) | Sarthak | Vercel preview rendering contract fixtures, including all result states |
-| 07 | [Sejal — System, security, and data design validation](../sejal/PHASE_07_SYSTEM_SECURITY_DATA.md) | Sejal | Reviewed schema, threat/privacy notes, and deploy checklist in Markdown |
-| 08 | [Sejal — Deployment and integration harness](../sejal/PHASE_08_DEPLOY_AND_INTEGRATE.md) | Sejal | Preview environments, health/smoke workflow, and reproducible integration instructions |
+| 01 | [Sarthak — Product shell and responsive design system](../documentation/sarthak/PHASE_01_PRODUCT_SHELL.md) | Sarthak | Vercel preview with navigable screens and fixture mode |
+| 02 | [Aarush — Profile and evidence API](../documentation/aarush/PHASE_02_PROFILE_EVIDENCE_API.md) | Aarush | Render preview; API requests against isolated PostgreSQL or local synthetic mode |
+| 03 | [Aarush — Resume parsing and review contract](../documentation/aarush/PHASE_03_RESUME_PARSER.md) | Aarush | Stand-alone parser API/demo with sample files and no database requirement |
+| 04 | [Aarush — Explainable readiness scoring engine](../documentation/aarush/PHASE_04_READINESS_ENGINE.md) | Aarush | Deterministic CLI/API demo with fixtures and unit tests |
+| 05 | [Aarush — Opportunity and role matching](../documentation/aarush/PHASE_05_OPPORTUNITY_MATCH.md) | Aarush | Stand-alone API/demo with fixture profiles and JDs |
+| 06 | [Sarthak — Results dashboard and action plan](../documentation/sarthak/PHASE_06_RESULTS_DASHBOARD.md) | Sarthak | Vercel preview rendering contract fixtures, including all result states |
+| 07 | [Sejal — System, security, and data design validation](../documentation/sejal/PHASE_07_SYSTEM_SECURITY_DATA.md) | Sejal | Reviewed schema, threat/privacy notes, and deploy checklist in Markdown |
+| 08 | [Sejal — Deployment and integration harness](../documentation/sejal/PHASE_08_DEPLOY_AND_INTEGRATE.md) | Sejal | Preview environments, health/smoke workflow, and reproducible integration instructions |
 
 Each phase brief is stored in its owner's folder so independent edits stay separated.
 

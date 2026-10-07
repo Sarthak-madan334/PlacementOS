@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Build a focused FastAPI + Python service for profile evidence, resume analysis, deterministic readiness, and role matching. Deploy to Render. Keep `../shared/SRD.md`, `../shared/ARCHITECTURE.md`, and `../shared/TECH_STACK.md` as the source contracts.
+Build a focused FastAPI + Python service for profile evidence, resume analysis, deterministic readiness, and role matching. Deploy to Render. Keep [`../../docs/SRD.md`](../../docs/SRD.md), [`../../docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md), and [`../../docs/TECH_STACK.md`](../../docs/TECH_STACK.md) as the source contracts.
 
 ## Service shape
 
@@ -16,7 +16,7 @@ Build a focused FastAPI + Python service for profile evidence, resume analysis, 
 - Owner-scoped profile CRUD, skills, and projects.
 - Resume parse endpoint for PDF/DOCX/TXT up to 5 MiB; deterministic extraction, candidate facts, warnings, stable error codes, and no auto-confirm.
 - Opportunity/JD storage and requirements extraction with a small versioned skill alias vocabulary.
-- `cp-v1` readiness scoring with exact factors/weights and missing-factor renormalization as specified in `../shared/SRD.md`.
+- `cp-v1` readiness scoring with exact factors/weights and missing-factor renormalization as specified in [`../../docs/SRD.md`](../../docs/SRD.md).
 - Separate eligibility (`eligible`, `not_eligible`, `unknown`) and role match; explain factors, confidence, evidence source, gaps, and up to three actions.
 - Assessment persistence with scoring version and compact input snapshot.
 - Optional private file upload/signing and deletion through one configured provider adapter.
@@ -35,4 +35,4 @@ Build a focused FastAPI + Python service for profile evidence, resume analysis, 
 - API tests: validation, identity, ownership, error shapes, and health behavior.
 - Database tests: clean migration and foreign-key/deletion behavior.
 - Deploy independently to Render with synthetic data, documented curl examples, OpenAPI, and working health endpoints. Frontend is not required for demonstration.
-- Use environment configuration from `../shared/IMPLEMENTATION_GUIDE.md`; never commit real secrets.
+- Use environment configuration from [`../../docs/IMPLEMENTATION_GUIDE.md`](../../docs/IMPLEMENTATION_GUIDE.md); never commit real secrets.

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Build the student-facing PlacementOS/CampusProof experience in Next.js + TypeScript. The interface makes role-specific readiness understandable and actionable, with a polished glassmorphism dashboard. Use `../shared/DESIGN.md`, `../shared/SRD.md`, and `../shared/TECH_STACK.md` as the visual and technical contracts.
+Build the student-facing PlacementOS/CampusProof experience in Next.js + TypeScript. The interface makes role-specific readiness understandable and actionable, with a polished glassmorphism dashboard. Use [`../../docs/DESIGN.md`](../../docs/DESIGN.md), [`../../docs/SRD.md`](../../docs/SRD.md), and [`../../docs/TECH_STACK.md`](../../docs/TECH_STACK.md) as the visual and technical contracts.
 
 ## User flow and screens
 
@@ -24,7 +24,7 @@ Build the student-facing PlacementOS/CampusProof experience in Next.js + TypeScr
 ## Implementation boundaries
 
 - Keep UI components presentational where practical; keep API transport and fixture selection in `lib/api` or an equivalent small module.
-- Define TypeScript types from or aligned with FastAPI OpenAPI. Fixtures conform to `../shared/SRD.md`.
+- Define TypeScript types from or aligned with FastAPI OpenAPI. Fixtures conform to [`../../docs/SRD.md`](../../docs/SRD.md).
 - Use `NEXT_PUBLIC_API_BASE_URL` and `NEXT_PUBLIC_DEMO_MODE`. Browser configuration must never contain database or storage service secrets.
 - Do not calculate authoritative eligibility, readiness, or role match in the browser. Render backend response fields as returned.
 - For persisted data, use the selected managed auth client and pass tokens through the API client using the documented secure flow. Guest demo uses synthetic data and makes no persistence call.

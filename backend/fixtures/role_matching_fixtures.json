@@ -1,0 +1,170 @@
+{
+  "opportunities": {
+    "software_engineer": {
+      "role_title": "Software Engineer",
+      "company": "TechCorp Systems",
+      "required_skills": [
+        "Python",
+        "SQL",
+        "Git"
+      ],
+      "preferred_skills": [
+        "Docker",
+        "AWS"
+      ],
+      "explicit_criteria": {
+        "min_cgpa": 7.0,
+        "allowed_branches": [
+          "Computer Science",
+          "Information Technology",
+          "Computer Science and Engineering"
+        ],
+        "allowed_years": [
+          2025,
+          2026,
+          2027
+        ]
+      },
+      "jd_text": "TechCorp is looking for a Software Engineer to join our backend team.\n\nRequirements:\n- Strong knowledge of Python (Python 3)\n- Hands-on experience with SQL databases (PostgreSQL/MySQL)\n- Version control proficiency in Git\n\nNice to have:\n- Familiarity with containerization in Docker\n- Experience deploying to AWS (Amazon Web Services)"
+    },
+    "ai_ml_intern": {
+      "role_title": "AI/ML Intern",
+      "company": "NeuralDynamics Lab",
+      "required_skills": [
+        "Python",
+        "Machine Learning",
+        "Statistics"
+      ],
+      "preferred_skills": [
+        "PyTorch",
+        "TensorFlow"
+      ],
+      "explicit_criteria": {
+        "min_cgpa": 8.0,
+        "allowed_years": [
+          2026,
+          2027
+        ]
+      },
+      "jd_text": "NeuralDynamics Lab is hiring an AI/ML Research Intern.\n\nRequired Qualifications:\n- Strong proficiency in Python for data science\n- Core understanding of Machine Learning algorithms\n- Strong foundation in Probability and Statistics\n\nBonus Points:\n- Experience with PyTorch or TensorFlow frameworks\n- Experience with Scikit-Learn or Pandas"
+    },
+    "data_analyst": {
+      "role_title": "Data Analyst",
+      "company": "InsightAnalytics Global",
+      "required_skills": [
+        "SQL",
+        "Excel",
+        "Data Analysis"
+      ],
+      "preferred_skills": [
+        "Power BI",
+        "Tableau"
+      ],
+      "explicit_criteria": {
+        "min_cgpa": 6.5
+      },
+      "jd_text": "InsightAnalytics seeks a Data Analyst.\n\nWhat You Will Need:\n- Proficiency in SQL querying and data extraction\n- Advanced skills in Microsoft Excel (spreadsheets, formulas)\n- Practical experience with exploratory Data Analysis\n\nPreferred:\n- Data visualization using Power BI or Tableau"
+    },
+    "unspecified_requirements": {
+      "role_title": "General Developer",
+      "company": "Open Ventures",
+      "required_skills": [],
+      "preferred_skills": [],
+      "explicit_criteria": {},
+      "jd_text": "We are looking for enthusiastic developers to work on general technology projects."
+    }
+  },
+  "candidate_profiles": {
+    "strong_swe_candidate": {
+      "full_name": "Aarush Sharma",
+      "branch": "Computer Science and Engineering",
+      "graduation_year": 2026,
+      "cgpa": 8.5,
+      "cgpa_scale": 10.0,
+      "target_role": "Software Engineer",
+      "skills": [
+        "Python",
+        "SQL",
+        "Git",
+        "Docker"
+      ],
+      "projects": [
+        {
+          "title": "E-Commerce Microservices",
+          "description": "Developed backend API services using Python and PostgreSQL SQL queries, managed with Git and containerized with Docker.",
+          "url": "https://github.com/aarush/ecommerce"
+        }
+      ],
+      "resume_skills": [
+        "Python",
+        "SQL",
+        "Git",
+        "Docker"
+      ]
+    },
+    "partial_aiml_candidate": {
+      "full_name": "Priya Patel",
+      "branch": "Computer Science",
+      "graduation_year": 2026,
+      "cgpa": 7.8,
+      "cgpa_scale": 10.0,
+      "target_role": "AI/ML Intern",
+      "skills": [
+        "Python",
+        "Machine Learning"
+      ],
+      "projects": [
+        {
+          "title": "Predictive Health Model",
+          "description": "Built classification model in Python using scikit-learn for machine learning benchmarks.",
+          "url": "https://github.com/priya/health-ml"
+        }
+      ],
+      "resume_skills": [
+        "Python",
+        "Machine Learning"
+      ]
+    },
+    "unrelated_branch_candidate": {
+      "full_name": "Rohan Verma",
+      "branch": "Civil Engineering",
+      "graduation_year": 2026,
+      "cgpa": 8.2,
+      "cgpa_scale": 10.0,
+      "target_role": "Software Engineer",
+      "skills": [
+        "Python",
+        "SQL",
+        "Git"
+      ],
+      "projects": [],
+      "resume_skills": [
+        "Python"
+      ]
+    },
+    "no_cgpa_candidate": {
+      "full_name": "Vikram Singh",
+      "branch": "Information Technology",
+      "graduation_year": 2026,
+      "cgpa": null,
+      "cgpa_scale": null,
+      "target_role": "Data Analyst",
+      "skills": [
+        "SQL",
+        "Excel",
+        "Data Analysis"
+      ],
+      "projects": [
+        {
+          "title": "Sales Analytics Dashboard",
+          "description": "Analyzed 100k sales rows in SQL and created interactive reports in Microsoft Excel.",
+          "url": "https://github.com/vikram/sales"
+        }
+      ],
+      "resume_skills": [
+        "SQL",
+        "Excel"
+      ]
+    }
+  }
+}

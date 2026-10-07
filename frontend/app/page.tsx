@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import { createAssessment, parseResume } from "@/lib/api";
 import { ResultsView } from "./results-view";
+import { RoleSuggestionInput, SkillSuggestionInput } from "./suggestion-inputs";
+import { GlassSelect } from "./glass-select";
 import { demoProfile } from "@/lib/demo-data";
 import type { Assessment, AssessmentRequest, ResumeParseResponse, StudentProfile, View } from "@/lib/contracts";
 
@@ -73,6 +75,11 @@ export default function Home() {
   function updateProfile(key: keyof StudentProfile, value: string) {
     setProfile((current) => ({ ...current, [key]: value }));
     if (assessment) setNotice("Your profile changed. These results reflect the previous version.");
+  }
+
+  function addSkill(skill: string) {
+    if (skills.some((item) => item.toLocaleLowerCase() === skill.toLocaleLowerCase())) return;
+    updateProfile("skills", [...skills, skill].join(", "));
   }
 
   function useDemo() {
@@ -205,12 +212,12 @@ export default function Home() {
           <section className="form-card glass">
             <div className="form-section-title"><span className="number">01</span><div><h2>Start with the basics</h2><p>Required details help frame your readiness snapshot.</p></div></div>
             <div className="form-grid">
-              <label className="field full">Target role <span className="required">*</span><input list="role-suggestions" autoComplete="off" value={profile.role} onChange={(e) => updateProfile("role", e.target.value)} placeholder="Type a role, e.g. Data analyst"/><datalist id="role-suggestions">{roleSuggestions.map((role) => <option key={role} value={role}/>)}</datalist><small>Start typing for role suggestions, or enter any title.</small></label>
+              <div className="field full suggestion-field"><label htmlFor="target-role">Target role <span className="required">*</span></label><RoleSuggestionInput suggestions={roleSuggestions} value={profile.role} onChange={(role) => updateProfile("role", role)}/><small>Start typing for role suggestions, or enter any title.</small></div>
               <label className="field">Branch / degree <span className="required">*</span><input value={profile.branch} onChange={(e) => updateProfile("branch", e.target.value)} placeholder="e.g. Computer Science"/></label>
-              <label className="field">Graduation year <span className="required">*</span><select value={profile.graduationYear} onChange={(e) => updateProfile("graduationYear", e.target.value)}><option value="">Select year</option>{[2025,2026,2027,2028,2029,2030].map((year) => <option key={year}>{year}</option>)}</select></label>
+              <div className="field"><label htmlFor="graduation-year">Graduation year <span className="required">*</span></label><GlassSelect id="graduation-year" value={profile.graduationYear} placeholder="Select year" options={[2025,2026,2027,2028,2029,2030].map((year) => ({ value: String(year), label: String(year) }))} onChange={(year) => updateProfile("graduationYear", year)}/></div>
               <label className="field">CGPA <span className="optional">OPTIONAL</span><input type="number" min="0" max={profile.cgpaScale} step="0.01" value={profile.cgpa} onChange={(e) => updateProfile("cgpa", e.target.value)} placeholder="e.g. 8.2"/></label>
-              <label className="field">Scale<select value={profile.cgpaScale} onChange={(e) => updateProfile("cgpaScale", e.target.value)}><option value="10">Out of 10</option><option value="4">Out of 4</option><option value="100">Out of 100</option></select></label>
-              <label className="field full">Skills <span className="required">*</span><input list="skill-suggestions" value={profile.skills} onChange={(e) => updateProfile("skills", e.target.value)} placeholder="Type or enter skills separated by commas"/><datalist id="skill-suggestions">{skillSuggestions.map((skill) => <option key={skill} value={skill}/>)}</datalist><small>Broad suggestions across engineering, data, design, business and transferable skills. Add any skill you want.</small><div className="skill-pills">{skills.slice(0, 6).map((skill) => <span key={skill}>{skill}<button onClick={() => updateProfile("skills", skills.filter((item) => item !== skill).join(", "))} aria-label={`Remove ${skill}`}>×</button></span>)}</div></label>
+              <div className="field"><label htmlFor="cgpa-scale">Scale</label><GlassSelect id="cgpa-scale" value={profile.cgpaScale} options={[{ value: "10", label: "Out of 10" }, { value: "4", label: "Out of 4" }, { value: "100", label: "Out of 100" }]} onChange={(scale) => updateProfile("cgpaScale", scale)}/></div>
+              <div className="field full skill-field"><span>Skills <span className="required">*</span></span><SkillSuggestionInput suggestions={skillSuggestions} selected={skills} onAdd={addSkill}/><small>Type to see suggestions, add several skills, or enter a custom one.</small><div className="skill-pills">{skills.map((skill) => <span key={skill}>{skill}<button type="button" onClick={() => updateProfile("skills", skills.filter((item) => item !== skill).join(", "))} aria-label={`Remove ${skill}`}>×</button></span>)}</div></div>
               <label className="field full">Project or experience <span className="optional">OPTIONAL</span><textarea rows={4} value={profile.project} onChange={(e) => updateProfile("project", e.target.value)} placeholder="What did you make, contribute to, or learn?"/><small>Specific contributions help describe your evidence more clearly.</small></label>
               <label className="field">GitHub profile <span className="optional">OPTIONAL</span><input type="url" value={profile.githubUrl} onChange={(e) => updateProfile("githubUrl", e.target.value)} placeholder="https://github.com/username"/><small>We check public repositories, primary languages and a limited sample of recent public commits.</small></label>
               <label className="field">LinkedIn profile <span className="optional">OPTIONAL</span><input type="url" value={profile.linkedinUrl} onChange={(e) => updateProfile("linkedinUrl", e.target.value)} placeholder="https://linkedin.com/in/your-name"/><small>We detect the link only; LinkedIn content and activity are not accessed.</small></label>
@@ -231,7 +238,7 @@ export default function Home() {
           <label className="field full">Preferred skills <span className="optional">OPTIONAL</span><input value={preferredSkills} onChange={(event) => setPreferredSkills(event.target.value)} placeholder="Docker, accessibility"/></label>
           <div className="criteria-divider field full"><span>Explicit eligibility rules</span><small>Leave blank when the opportunity doesn’t state a rule.</small></div>
           <label className="field">Minimum CGPA <span className="optional">OPTIONAL</span><input type="number" min="0" max={minimumCgpaScale} step="0.01" value={minimumCgpa} onChange={(event) => setMinimumCgpa(event.target.value)} placeholder="No minimum stated"/></label>
-          <label className="field">CGPA scale<select value={minimumCgpaScale} onChange={(event) => setMinimumCgpaScale(event.target.value)}><option value="10">Out of 10</option><option value="4">Out of 4</option><option value="100">Out of 100</option></select></label>
+          <div className="field"><label htmlFor="minimum-cgpa-scale">CGPA scale</label><GlassSelect id="minimum-cgpa-scale" value={minimumCgpaScale} options={[{ value: "10", label: "Out of 10" }, { value: "4", label: "Out of 4" }, { value: "100", label: "Out of 100" }]} onChange={setMinimumCgpaScale}/></div>
           <label className="field full">Eligible branches <span className="optional">OPTIONAL</span><input value={eligibleBranches} onChange={(event) => setEligibleBranches(event.target.value)} placeholder="e.g. Computer Science, Information Technology"/><small>Comma-separated; compare against your profile branch.</small></label>
           <label className="field full">Eligible graduation years <span className="optional">OPTIONAL</span><input value={eligibleYears} onChange={(event) => setEligibleYears(event.target.value)} placeholder="e.g. 2026, 2027"/></label>
           <div className="field full eligibility-callout"><span>ⓘ</span><p><strong>Missing criteria stay unknown.</strong><br/>No minimum GPA, branch, or graduation rule is inferred from the job-description text.</p></div>

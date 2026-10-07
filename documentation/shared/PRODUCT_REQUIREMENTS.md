@@ -87,16 +87,17 @@ Each owner can start independently against the contracts in `SRD.md` and `ARCHIT
 ## 7. Required reading
 
 1. This product brief.
-2. [`SRD.md`](SRD.md) — functional/non-functional requirements and contract.
-3. [`ARCHITECTURE.md`](ARCHITECTURE.md) — runtime boundaries, data, and API.
-4. [`DESIGN.md`](DESIGN.md) — UI behavior and visual system.
-5. [`IMPLEMENTATION_GUIDE.md`](IMPLEMENTATION_GUIDE.md) — SOLID, security, testing, deployment, and independent delivery rules.
-6. [`PHASES.md`](PHASES.md) — eight independent workstreams and shared completion criteria.
-7. [`SCORING_AND_PARSING.md`](SCORING_AND_PARSING.md) — detailed, versioned analysis rules.
-8. [`INTEGRATION_RUNBOOK.md`](INTEGRATION_RUNBOOK.md) — preview connection, smoke checks, and release/rollback steps.
+2. [`REQUIREMENTS.md`](REQUIREMENTS.md) and [`TECH_STACK.md`](TECH_STACK.md) — requirement traceability and approved stack.
+3. [`SRD.md`](SRD.md) — functional/non-functional requirements and API/scoring contract.
+4. [`ARCHITECTURE.md`](ARCHITECTURE.md) — runtime boundaries, data, and identity.
+5. [`DESIGN.md`](DESIGN.md) — UI behavior and visual system.
+6. [`IMPLEMENTATION_GUIDE.md`](IMPLEMENTATION_GUIDE.md) — SOLID, security, testing, deployment, and independent delivery rules.
+7. [`PHASES.md`](PHASES.md) — eight independent workstreams and shared completion criteria.
+8. [`SCORING_AND_PARSING.md`](SCORING_AND_PARSING.md) — detailed, versioned analysis rules.
+9. [`INTEGRATION_RUNBOOK.md`](INTEGRATION_RUNBOOK.md) — preview connection, smoke checks, and release/rollback steps.
 
 ## 8. Direction for Antigravity
 
-Treat the five Phase Zero specification files as the agreed source of truth. Before coding, summarize the chosen MVP flow, proposed repository layout, and any conflict with the contracts. Then implement a runnable vertical slice with fixtures; preserve the API and scoring contract; do not add out-of-scope features or credentials; and show loading, empty, error, and success states. If an implementation detail is genuinely unspecified, choose the simplest reversible option and document it. Do not silently change product behavior or scoring rules.
+Treat the shared specs plus the assigned member specification as the agreed source of truth. Before coding, summarize the chosen MVP flow, proposed repository layout, and any conflict with the contracts. Then implement a runnable vertical slice with fixtures; preserve the API and scoring contract; do not add out-of-scope features or credentials; and show loading, empty, error, and success states. If an implementation detail is genuinely unspecified, choose the simplest reversible option and document it. Do not silently change product behavior or scoring rules.
 
 For phase work, open the owner-prefixed brief linked from [`PHASES.md`](PHASES.md) and [`INTEGRATION_RUNBOOK.md`](INTEGRATION_RUNBOOK.md) when connecting previews. All numbered phases are independently startable; integration is a shared release checkpoint, not a prerequisite between workstreams.

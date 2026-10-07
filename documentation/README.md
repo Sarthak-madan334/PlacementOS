@@ -3,6 +3,8 @@
 ## Shared product and technical direction
 
 - [`PRODUCT_REQUIREMENTS.md`](shared/PRODUCT_REQUIREMENTS.md) — product goal, MVP scope, and Antigravity direction.
+- [`REQUIREMENTS.md`](shared/REQUIREMENTS.md) — concise requirement IDs and release traceability.
+- [`TECH_STACK.md`](shared/TECH_STACK.md) — approved technologies and default provider configuration.
 - [`SRD.md`](shared/SRD.md) — functional requirements, scoring contract, API shapes, and acceptance cases.
 - [`ARCHITECTURE.md`](shared/ARCHITECTURE.md) — components, data model, identity, and hosting boundaries.
 - [`DESIGN.md`](shared/DESIGN.md) — glassmorphism visual direction, screens, responsive behavior, and UI states.
@@ -13,8 +15,8 @@
 
 ## Member-owned phase documents
 
-- [Sarthak](sarthak/) — frontend shell and results dashboard.
-- [Aarush](aarush/) — profile API, resume parser, readiness engine, and opportunity matching.
+- [Sarthak](sarthak/) — [frontend specification](sarthak/FRONTEND.md), product shell, and results dashboard.
+- [Aarush](aarush/) — [backend specification](aarush/BACKEND.md), profile API, resume parser, readiness engine, and opportunity matching.
 - [Sejal](sejal/) — system/security review and deployment/integration harness.
 
 Every phase can start with fixtures and be demonstrated independently. The shared integration check is a release checkpoint, not a development prerequisite. See [`CONTRIBUTING.md`](../CONTRIBUTING.md) for branch and ownership workflow.

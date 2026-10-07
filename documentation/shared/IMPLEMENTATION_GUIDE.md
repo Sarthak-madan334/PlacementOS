@@ -1,6 +1,6 @@
 # CampusProof — Implementation, Quality, and Delivery Guide
 
-This is the implementation agent's operating guide. Follow `README.md`, `SRD.md`, `ARCHITECTURE.md`, and `DESIGN.md` as product contracts.
+This is the implementation agent's operating guide. Follow `PRODUCT_REQUIREMENTS.md`, `REQUIREMENTS.md`, `TECH_STACK.md`, `SRD.md`, `ARCHITECTURE.md`, and `DESIGN.md` as product contracts. Use the detailed `FRONTEND.md` or `BACKEND.md` specification for the relevant member-owned implementation.
 
 ## 1. Stack and repository boundaries
 

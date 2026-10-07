@@ -351,3 +351,93 @@ def test_matching_engine_determinism_multi_run():
         assert report_iter.role_match.missing_required == report_initial.role_match.missing_required
         assert report_iter.role_match.matched_preferred == report_initial.role_match.matched_preferred
         assert report_iter.role_match.missing_preferred == report_initial.role_match.missing_preferred
+
+
+def test_multiple_simultaneous_eligibility_failures():
+    """Verify that multiple simultaneous eligibility failures return all relevant reason codes."""
+    criteria = {
+        "min_cgpa": 8.0,
+        "allowed_branches": ["Computer Science"],
+        "allowed_years": [2026, 2027],
+    }
+    candidate_all_fail = {
+        "cgpa": 7.2,  # Fail
+        "branch": "Civil Engineering",  # Fail
+        "graduation_year": 2024,  # Fail
+    }
+
+    result = MatchingEngine.evaluate_eligibility(candidate_all_fail, criteria)
+    assert result.status == "not_eligible"
+    codes = [r.code for r in result.reasons]
+    assert "CGPA_BELOW_MINIMUM" in codes
+    assert "BRANCH_NOT_ELIGIBLE" in codes
+    assert "GRADUATION_YEAR_NOT_ELIGIBLE" in codes
+    assert len(codes) == 3
+
+
+def test_duplicate_requirements_do_not_inflate_score():
+    """Duplicate requirement phrases or aliases are deduplicated and do not inflate score."""
+    candidate = {
+        "skills": ["Python"],
+        "projects": [],
+        "resume_skills": ["Python"],
+    }
+    # Opportunity lists Python 3 times under different aliases
+    opportunity = {
+        "required_skills": ["Python", "python3", "py"],
+        "preferred_skills": [],
+        "explicit_criteria": {},
+    }
+
+    report = MatchingEngine.evaluate(candidate, opportunity)
+    # Only 1 unique required skill should exist
+    assert report.role_match.total_required == 1
+    assert report.role_match.score == 100
+    assert len(report.role_match.matched_required) == 1
+
+
+def test_opportunity_with_only_preferred_skills():
+    """Opportunity with only preferred skills returns null required score with NO_ASSESSABLE_REQUIREMENTS."""
+    candidate = {
+        "skills": ["Docker", "AWS"],
+        "projects": [],
+        "resume_skills": ["Docker", "AWS"],
+    }
+    opportunity = {
+        "required_skills": [],
+        "preferred_skills": ["Docker", "AWS"],
+        "explicit_criteria": {},
+    }
+
+    report = MatchingEngine.evaluate(candidate, opportunity)
+    assert report.role_match.score is None
+    assert report.role_match.reason_code == "NO_ASSESSABLE_REQUIREMENTS"
+    assert report.role_match.total_required == 0
+    assert report.role_match.total_preferred == 2
+    assert sorted(report.role_match.matched_preferred) == ["AWS", "Docker"]
+
+
+def test_evidence_provenance_tracking():
+    """Matched skills include source metadata (profile, resume, project with repository link)."""
+    candidate = {
+        "skills": ["Python"],
+        "projects": [
+            {
+                "title": "Data Pipeline",
+                "description": "Engineered distributed pipeline with PostgreSQL and Docker.",
+                "url": "https://github.com/example/data",
+            }
+        ],
+        "resume_skills": ["SQL"],
+    }
+    opportunity = {
+        "required_skills": ["Python", "SQL", "PostgreSQL"],
+    }
+
+    report = MatchingEngine.evaluate(candidate, opportunity)
+    req_items = {r.original_phrase: r for r in report.requirements}
+
+    assert "profile_skill" in req_items["Python"].evidence_source
+    assert "resume_skill" in req_items["SQL"].evidence_source
+    assert "project:Data Pipeline (with repository link)" in req_items["PostgreSQL"].evidence_source
+

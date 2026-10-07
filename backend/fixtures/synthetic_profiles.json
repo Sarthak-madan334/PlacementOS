@@ -1,0 +1,89 @@
+[
+  {
+    "full_name": "Aarush Sharma",
+    "branch": "Computer Science and Engineering",
+    "graduation_year": 2026,
+    "cgpa": 8.75,
+    "cgpa_scale": 10.0,
+    "target_role": "Backend Engineer",
+    "skills": [
+      {
+        "display_name": "Python",
+        "normalized_name": "python",
+        "self_reported_level": "advanced",
+        "source": "self_reported"
+      },
+      {
+        "display_name": "FastAPI",
+        "normalized_name": "fastapi",
+        "self_reported_level": "advanced",
+        "source": "self_reported"
+      },
+      {
+        "display_name": "PostgreSQL",
+        "normalized_name": "postgresql",
+        "self_reported_level": "intermediate",
+        "source": "self_reported"
+      },
+      {
+        "display_name": "Docker",
+        "normalized_name": "docker",
+        "self_reported_level": "intermediate",
+        "source": "self_reported"
+      }
+    ],
+    "projects": [
+      {
+        "title": "CampusProof Placement Readiness Engine",
+        "description": "Architected deterministic backend scoring, profile evidence persistence, and resume parsing service using FastAPI and PostgreSQL.",
+        "url": "https://github.com/Sarthak-madan334/PlacementOS",
+        "start_date": "2025-01-01",
+        "end_date": "2025-05-01"
+      },
+      {
+        "title": "Distributed Task Worker",
+        "description": "Implemented a lightweight background job processing queue in Python with deterministic retry policies and health monitoring.",
+        "url": "https://github.com/example/task-worker",
+        "start_date": "2024-08-01",
+        "end_date": "2024-12-01"
+      }
+    ]
+  },
+  {
+    "full_name": "Priya Patel",
+    "branch": "Information Technology",
+    "graduation_year": 2025,
+    "cgpa": 9.1,
+    "cgpa_scale": 10.0,
+    "target_role": "Full Stack Developer",
+    "skills": [
+      {
+        "display_name": "TypeScript",
+        "normalized_name": "typescript",
+        "self_reported_level": "advanced",
+        "source": "self_reported"
+      },
+      {
+        "display_name": "React",
+        "normalized_name": "react",
+        "self_reported_level": "advanced",
+        "source": "self_reported"
+      },
+      {
+        "display_name": "Node.js",
+        "normalized_name": "node.js",
+        "self_reported_level": "intermediate",
+        "source": "self_reported"
+      }
+    ],
+    "projects": [
+      {
+        "title": "Student Analytics Dashboard",
+        "description": "Responsive Next.js analytics dashboard visualizing readiness factors, strengths, and gap breakdowns.",
+        "url": "https://github.com/example/analytics-dashboard",
+        "start_date": "2024-09-01",
+        "end_date": null
+      }
+    ]
+  }
+]

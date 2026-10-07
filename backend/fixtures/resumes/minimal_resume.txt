@@ -1,0 +1,5 @@
+Priya Patel
+Email: priya.patel@example.com
+
+Technical Skills
+React, TypeScript, CSS, HTML

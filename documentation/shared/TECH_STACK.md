@@ -8,15 +8,15 @@ This is the agreed MVP stack. Keep provider choices configurable, but choose one
 |---|---|---|
 | Web application | Next.js + TypeScript | Vercel; UI, forms, typed API client, fixture/demo mode |
 | API | FastAPI + Python | Render; validation, identity checks, parsing orchestration, scoring, persistence |
-| Database | PostgreSQL | Neon or Supabase; relational source of truth |
-| Managed authentication | Supabase Auth by default | Browser sign-in and API JWT verification; if using Neon, select another compatible managed identity provider |
-| Resume storage | Supabase Storage or Cloudinary | Private objects, short-lived access, random object keys |
+| Database | Supabase PostgreSQL | Relational source of truth; separate preview and production projects |
+| Managed authentication | Supabase Auth | Browser sign-in and API JWT verification |
+| Resume storage | Supabase Storage | Private bucket, short-lived access, random object keys |
 | Database access | SQLAlchemy 2.x + Alembic | ORM/session handling and schema migrations |
 | Source control | GitHub | Owner folders, feature branches, pull requests, CI |
 
 ## Default first deployment
 
-Use **Supabase PostgreSQL + Supabase Auth + private Supabase Storage**, **Next.js on Vercel**, and **FastAPI on Render**. This minimizes service setup while staying within the stack already selected. Neon + a compatible managed auth provider + Cloudinary remains supported when deliberately chosen.
+Use **Supabase PostgreSQL + Supabase Auth + private Supabase Storage**, **Next.js on Vercel**, and **FastAPI on Render**. This is the deployment target for PlacementOS; do not configure Neon or Cloudinary for this project.
 
 ## Runtime constraints
 
@@ -28,4 +28,4 @@ Use **Supabase PostgreSQL + Supabase Auth + private Supabase Storage**, **Next.j
 
 ## Service boundaries
 
-The browser calls FastAPI over HTTPS using the `/api/v1` contract in `SRD.md`. FastAPI owns authoritative validation and scores. PostgreSQL stores structured user data and assessments; object storage stores private resume files. See `ARCHITECTURE.md`, [`../aarush/BACKEND.md`](../aarush/BACKEND.md), and [`../sarthak/FRONTEND.md`](../sarthak/FRONTEND.md) for implementation details.
+The browser calls FastAPI over HTTPS using the `/api/v1` contract in `SRD.md`. FastAPI owns authoritative validation and scores. Supabase PostgreSQL stores structured user data and assessments; Supabase Storage holds private resume files. See `ARCHITECTURE.md`, [`../aarush/BACKEND.md`](../aarush/BACKEND.md), [`../sarthak/FRONTEND.md`](../sarthak/FRONTEND.md), and [`DEPLOYMENT.md`](DEPLOYMENT.md) for implementation details.

@@ -6,7 +6,7 @@
 
 ## Outcome
 
-Prepare a repeatable path for each application component to deploy independently and for compatible versions to connect in an isolated preview. It does not own unfinished feature implementation.
+Prepare a repeatable path for each application component to deploy independently and for compatible versions to connect in an isolated preview. It does not own unfinished feature implementation. Follow [`../shared/DEPLOYMENT.md`](../shared/DEPLOYMENT.md) for provider-specific setup.
 
 ## Build
 

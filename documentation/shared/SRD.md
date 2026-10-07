@@ -2,7 +2,7 @@
 
 ## 1. Purpose and boundaries
 
-This document converts the product brief into behavior that frontend and backend can implement independently. MVP services use Next.js + TypeScript, FastAPI + Python, and PostgreSQL on Neon or Supabase. Files use Supabase Storage or Cloudinary. GitHub is the source repository. Core analysis must not require paid APIs. For the lowest-friction first deployment, default to Supabase for PostgreSQL, Auth, and private Storage; Neon + a compatible managed identity provider + Cloudinary remains a documented provider alternative.
+This document converts the product brief into behavior that frontend and backend can implement independently. MVP services use Next.js + TypeScript on Vercel, FastAPI + Python on Render, and Supabase PostgreSQL, Auth, and private Storage. GitHub is the source repository. Core analysis must not require paid APIs.
 
 ## 2. User journeys and requirements
 

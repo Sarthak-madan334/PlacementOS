@@ -5,6 +5,7 @@
 - [`PRODUCT_REQUIREMENTS.md`](shared/PRODUCT_REQUIREMENTS.md) — product goal, MVP scope, and Antigravity direction.
 - [`REQUIREMENTS.md`](shared/REQUIREMENTS.md) — concise requirement IDs and release traceability.
 - [`TECH_STACK.md`](shared/TECH_STACK.md) — approved technologies and default provider configuration.
+- [`DEPLOYMENT.md`](shared/DEPLOYMENT.md) — exact Vercel, Render, and Supabase setup and release checks.
 - [`SRD.md`](shared/SRD.md) — functional requirements, scoring contract, API shapes, and acceptance cases.
 - [`ARCHITECTURE.md`](shared/ARCHITECTURE.md) — components, data model, identity, and hosting boundaries.
 - [`DESIGN.md`](shared/DESIGN.md) — glassmorphism visual direction, screens, responsive behavior, and UI states.

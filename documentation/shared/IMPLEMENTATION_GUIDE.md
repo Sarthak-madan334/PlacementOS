@@ -6,8 +6,8 @@ This is the implementation agent's operating guide. Follow `PRODUCT_REQUIREMENTS
 
 - Frontend: Next.js + TypeScript, deploy to Vercel.
 - Backend: FastAPI + Python, deploy to Render.
-- Data: PostgreSQL via Neon or Supabase; migrations with Alembic.
-- Files: private Supabase Storage or Cloudinary, selected by environment.
+- Data: Supabase PostgreSQL; migrations with Alembic.
+- Files: private Supabase Storage.
 - Source: GitHub. A monorepo or separate repositories are acceptable; use clear `frontend/` and `backend/` boundaries in a monorepo.
 - Core resume parsing, eligibility, readiness, and matching work without a paid API.
 
@@ -77,9 +77,8 @@ Backend configuration:
 | `DATABASE_URL` | TLS PostgreSQL connection URL |
 | `CORS_ORIGINS` | Exact comma-separated allowed frontend origins |
 | `AUTH_ISSUER_URL` / `AUTH_AUDIENCE` | Verified JWT issuer/audience; required for persisted user data |
-| `STORAGE_PROVIDER` | `supabase` or `cloudinary` when uploads are enabled |
-| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_STORAGE_BUCKET` | Server-only Supabase storage settings |
-| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Server-only Cloudinary settings |
+| `SUPABASE_STORAGE_BUCKET` | Private resume bucket name |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase storage settings |
 | `MAX_RESUME_BYTES` | Upload bound; default 5242880 |
 
 Commit placeholders only in `.env.example`; keep actual values in ignored local files and provider secret settings. Never put service-role keys, DB URLs, or provider secrets in `NEXT_PUBLIC_*`, client code, logs, or screenshots. Use separate preview and production credentials. Default to Supabase Auth for the first Supabase deployment; finalize provider settings before protected user data is deployed.

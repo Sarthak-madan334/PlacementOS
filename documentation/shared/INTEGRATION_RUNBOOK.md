@@ -1,5 +1,7 @@
 # CampusProof — Integration and Release Runbook
 
+See [`DEPLOYMENT.md`](DEPLOYMENT.md) for provider-specific Vercel, Render, and Supabase setup values.
+
 ## Environment mapping
 
 | Environment | Frontend | Backend | Data/storage |

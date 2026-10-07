@@ -6,8 +6,8 @@
 flowchart LR
   Student[Student browser] --> Web[Next.js + TypeScript<br/>Vercel]
   Web -->|HTTPS JSON /api/v1| API[FastAPI + Python<br/>Render]
-  API --> DB[(PostgreSQL<br/>Neon or Supabase)]
-  API --> Store[Private resume storage<br/>Supabase Storage or Cloudinary]
+  API --> DB[(Supabase PostgreSQL)]
+  API --> Store[Private Supabase Storage]
   API --> Parser[In-process deterministic parser<br/>PDF / DOCX / TXT]
 ```
 
@@ -57,11 +57,10 @@ Normalize skill terms through a small version-controlled alias map. Keep unknown
 
 ## 6. Auth and ownership
 
-Use Supabase Auth as the default identity provider because it fits the agreed Supabase-first deployment and avoids implementing passwords. If PostgreSQL is hosted on Neon, keep the API identity boundary provider-neutral and select a compatible managed identity provider. API validates token signature, issuer, audience, expiry, and subject. It maps the subject to `users.id`, then adds the owner predicate to every read/write. Never trust a user ID in request JSON, query parameters, or a file key. Guest demo mode contains synthetic fixtures only and does not call persistence routes.
+Use Supabase Auth because it fits the agreed deployment and avoids implementing passwords. API validates token signature, issuer, audience, expiry, and subject. It maps the subject to `users.id`, then adds the owner predicate to every read/write. Never trust a user ID in request JSON, query parameters, or a file key. Guest demo mode contains synthetic fixtures only and does not call persistence routes.
 
 ## 7. Provider configuration
 
-- Default to Supabase PostgreSQL + Supabase Auth + private Supabase Storage for a simple first release; use TLS and separate preview/production projects. Neon + a compatible managed auth provider + Cloudinary is an allowed configuration when deliberately selected.
-- Select Supabase Storage or Cloudinary for private resume objects. Keep provider calls behind a small application-owned storage interface.
-- Use one provider per environment. Do not build complex multi-provider failover.
+- Use Supabase PostgreSQL + Supabase Auth + private Supabase Storage; use TLS and separate preview/production projects.
+- Keep storage access behind a narrow service boundary for testing, but do not build multi-provider failover.
 - Use separate Vercel and Render preview/production settings; previews never use production student data.

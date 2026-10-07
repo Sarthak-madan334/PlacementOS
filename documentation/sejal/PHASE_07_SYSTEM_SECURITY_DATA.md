@@ -11,7 +11,7 @@ Validate that the architecture, data model, privacy safeguards, contracts, and d
 ## Work
 
 - Review the schema against profile, resume evidence, opportunity, and assessment journeys; verify owner relationships, deletion rules, indexes, and migration compatibility.
-- Record the initial provider decision. Recommended simplest first environment: Supabase PostgreSQL + Supabase Auth + private Supabase Storage. Keep Neon + compatible managed auth + Cloudinary as an allowed alternative.
+- Record the deployment decision: Supabase PostgreSQL + Supabase Auth + private Supabase Storage, with Next.js on Vercel and FastAPI on Render.
 - Review auth issuer/audience validation, owner-scoped access, upload boundaries, CORS, secret handling, log redaction, and account deletion.
 - Review score factors and ensure no hidden eligibility coupling, invented evidence, or unjustified numerical impact claims.
 - Maintain a compact risk list with likelihood, impact, mitigation, and owner. Prioritize privacy leak, cross-account access, corrupt upload, and destructive migration risks.

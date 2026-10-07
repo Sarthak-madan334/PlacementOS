@@ -1,0 +1,9 @@
+John Doe
+Email: john.doe@example.com
+
+Experience
+Company XYZ
+- Responsible for daily database backups and reports.
+- Assisted with frontend bug fixes.
+- Helped to test new features.
+- Worked on internal tools.

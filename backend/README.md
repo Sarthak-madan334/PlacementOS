@@ -42,7 +42,7 @@ OpenAPI docs will be available at: `http://localhost:8000/api/v1/docs`.
 
 ---
 
-## API Endpoints (Phase 02)
+## API Endpoints
 
 | Method | Endpoint | Description | Auth Required |
 |---|---|---|---|
@@ -51,6 +51,17 @@ OpenAPI docs will be available at: `http://localhost:8000/api/v1/docs`.
 | `GET` | `/api/v1/me/profile` | Get current authenticated student's profile | Yes (`Bearer <token>`) |
 | `PUT` | `/api/v1/me/profile` | Idempotently create/update profile, skills, projects | Yes (`Bearer <token>`) |
 | `DELETE` | `/api/v1/me/profile` | Delete profile and associated evidence records | Yes (`Bearer <token>`) |
+| `POST` | `/api/v1/resumes/parse` | Parse uploaded resume (PDF, DOCX, TXT) for review | No |
+
+---
+
+## Standalone Resume Parser CLI
+
+You can parse resume files directly via the command line without starting the web server:
+
+```bash
+python -m app.cli.parse_resume fixtures/resumes/sample_resume.txt
+```
 
 ---
 

@@ -355,3 +355,141 @@ def test_recommendations_capped_at_three():
         # Ensure no false promises in copy
         assert "guarantee" not in action.title.lower()
         assert "guarantee" not in action.rationale.lower()
+
+
+def test_exact_manual_mathematical_calculation():
+    """Verify that readiness score precisely matches independent manual arithmetic."""
+    # Build inputs to produce specific known factor scores:
+    # Role coverage (30%): 2 of 2 matched = 100 -> weighted = 30.0
+    # Project evidence (25%): 2 projects with desc, url, and resume work exp = 95 -> weighted = 23.75
+    # Resume clarity (20%): 4 sections (80) + 1 action signal (10) = 90 -> weighted = 18.0
+    # Technical skills (15%): 4 skills with project corroboration = 80 -> weighted = 12.0
+    # Profile completeness (10%): all fields populated = 100 -> weighted = 10.0
+    # Expected weighted sum = 30.0 + 23.75 + 18.0 + 12.0 + 10.0 = 93.75 -> rounded = 94
+
+    resume = ResumeEvidence(
+        sections_present=["contact", "education", "skills", "experience"],
+        contact_present=True,
+        education_present=True,
+        skills_present=True,
+        experience_present=True,
+        action_verbs_count=1,
+        quantified_outcomes_count=0,
+        weak_language_count=0,
+    )
+    profile = StudentProfileEvidence(
+        full_name="Aarush Sharma",
+        branch="Computer Science",
+        graduation_year=2026,
+        target_role="Backend Engineer",
+        skills=[
+            SkillEvidence(name="Python", normalized_name="python"),
+            SkillEvidence(name="FastAPI", normalized_name="fastapi"),
+            SkillEvidence(name="PostgreSQL", normalized_name="postgresql"),
+            SkillEvidence(name="Docker", normalized_name="docker"),
+        ],
+        projects=[
+            ProjectEvidence(
+                title="API Service",
+                description="Engineered backend API in Python and FastAPI with database queries.",
+                url="https://github.com/example/api",
+            ),
+            ProjectEvidence(
+                title="Data Ingestion",
+                description="Built data pipeline in Python with automated scheduled tasks.",
+                url="https://github.com/example/data",
+            ),
+        ],
+        resume=resume,
+    )
+    opp = OpportunityRequirement(
+        role_title="Backend Engineer",
+        required_skills=["Python", "FastAPI"],
+    )
+
+    report = ReadinessEngine.evaluate(profile, opp)
+    factors_by_key = {f.key: f.score for f in report.readiness.factors}
+
+    assert factors_by_key["role_skill_coverage"] == 100
+    assert factors_by_key["project_evidence"] == 95
+    assert factors_by_key["resume_clarity"] == 90
+    assert factors_by_key["technical_skills"] == 80
+    assert factors_by_key["profile_completeness"] == 100
+
+    assert report.readiness.score == 94
+
+
+def test_score_extreme_bounds_and_rounding():
+    """Verify that score is strictly bounded in [0, 100]."""
+    # Perfect profile & perfect resume & perfect role match -> 100
+    resume_perfect = ResumeEvidence(
+        sections_present=["contact", "education", "skills", "experience"],
+        contact_present=True,
+        education_present=True,
+        skills_present=True,
+        experience_present=True,
+        action_verbs_count=5,
+        quantified_outcomes_count=5,
+        weak_language_count=0,
+    )
+    profile_perfect = StudentProfileEvidence(
+        full_name="Aarush",
+        branch="CS",
+        graduation_year=2026,
+        target_role="Backend",
+        skills=[SkillEvidence(name=f"Skill{i}", normalized_name=f"skill{i}") for i in range(10)],
+        projects=[
+            ProjectEvidence(
+                title=f"Project {i}",
+                description="Substantive description with architecture and testing using skill0, skill1.",
+                url=f"https://github.com/p{i}",
+            )
+            for i in range(3)
+        ],
+        resume=resume_perfect,
+    )
+    opp_perfect = OpportunityRequirement(
+        role_title="Backend",
+        required_skills=["skill0", "skill1"],
+    )
+
+    report_perfect = ReadinessEngine.evaluate(profile_perfect, opp_perfect)
+    assert report_perfect.readiness.score == 100
+    assert report_perfect.readiness.score <= 100
+    assert report_perfect.readiness.score >= 0
+
+
+def test_conflicting_and_cross_source_evidence_handling():
+    """Evidence across profile, resume, and project descriptions is resolved deterministically."""
+    # Profile lists "Python", Resume extracted "FastAPI", Project description contains "PostgreSQL"
+    resume = ResumeEvidence(
+        sections_present=["skills"],
+        skills_present=True,
+        extracted_skills=["FastAPI"],
+    )
+    profile = StudentProfileEvidence(
+        full_name="Aarush",
+        branch="CS",
+        graduation_year=2026,
+        target_role="Backend",
+        skills=[SkillEvidence(name="Python", normalized_name="python")],
+        projects=[
+            ProjectEvidence(
+                title="PostgreSQL Database Integration",
+                description="Developed relational schema with PostgreSQL and SQLAlchemy.",
+                url="https://github.com/example/db",
+            )
+        ],
+        resume=resume,
+    )
+    opp = OpportunityRequirement(
+        role_title="Backend",
+        required_skills=["Python", "FastAPI", "PostgreSQL"],
+    )
+
+    report = ReadinessEngine.evaluate(profile, opp)
+    # All 3 required skills should be detected across the 3 evidence sources
+    assert report.role_match is not None
+    assert sorted(report.role_match.matched) == ["FastAPI", "PostgreSQL", "Python"]
+    assert report.role_match.score == 100
+
